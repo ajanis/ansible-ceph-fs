@@ -1,0 +1,37 @@
+---
+- name: install the ceph repository stable key
+  apt_key:
+    data: "{{ lookup('file', 'cephstable.asc') }}"
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: add ceph stable repository
+  apt_repository:
+    repo: "deb {{ ceph_stable_repo }} {{ ceph_stable_distro_source | default(ansible_lsb.codename) }} main"
+    state: present
+  changed_when: false
+  when: ansible_os_family == 'Debian'
+
+- name: install cephfs
+  apt:
+    name: ceph-common
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
+- name: create /etc/ceph directory
+  file: path=/etc/ceph state=directory
+
+- name: ceph key
+  copy: 
+    dest: /etc/ceph/secret.key 
+    content: "{{ ceph_admin_key }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add /etc/hosts entry for cephfs server
+  lineinfile:
+    dest: /etc/hosts
+    state: present
+    line: "{{cephfs_server_ip}} {{cephfs_server_domain_name}}"
