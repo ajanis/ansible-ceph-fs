@@ -1,0 +1,7 @@
+- name: Copy client.admin.keyring
+  template:
+    src: client.admin.keyring.j2
+    dest: /etc/ceph/client.admin.keyring
+    owner: root
+    group: root
+    mode: 0644
