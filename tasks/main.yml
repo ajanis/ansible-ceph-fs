@@ -1,2 +1,2 @@
 ---
-- include: cephfs_client.yml
+- include_tasks: cephfs_client.yml
