@@ -22,13 +22,13 @@
 - name: create /etc/ceph directory
   file: path=/etc/ceph state=directory
 
-- name: ceph key
-  copy: 
-    dest: /etc/ceph/secret.key 
-    content: "{{ ceph_admin_key }}"
-    owner: root
-    group: root
-    mode: 0644
+#- name: ceph key
+#  copy: 
+#    dest: /etc/ceph/secret.key 
+#    content: "{{ ceph_admin_key }}"
+#    owner: root
+#    group: root
+#    mode: 0644
 
 - name: Add /etc/hosts entry for cephfs server
   lineinfile:
