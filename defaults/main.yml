@@ -1,4 +1,1 @@
 ---
-cephfs_server_domain_name: ceph02.home.prettybaked.com
-cephfs_server_ip: 192.168.1.128
-ceph_admin_key: "{{ vault_ceph_admin_key }}"

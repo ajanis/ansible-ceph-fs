@@ -1,6 +1,18 @@
+- hosts: ceph
+  become: true
+  tasks:
+    - name: gather and delegate facts
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      with_items: "{{ groups['ceph'] }}"
+      run_once: true
+
 - hosts: all
-  gather_facts: True
+  gather_facts: true
   become: True
   tasks:
+    - import_role:
+        name: ceph-common
     - import_role:
         name: ceph-fs

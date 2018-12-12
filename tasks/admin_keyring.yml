@@ -1,7 +1,11 @@
-- name: Copy client.admin.keyring
-  template:
-    src: client.admin.keyring.j2
-    dest: /etc/ceph/client.admin.keyring
-    owner: root
-    group: root
-    mode: 0644
+---
+- name: copy ceph admin keyring
+  copy:
+    src: "{{ fetch_directory }}/{{ fsid }}/etc/ceph/{{ cluster }}.client.admin.keyring"
+    dest: "/etc/ceph/"
+    owner: "{{ ceph_uid if containerized_deployment else 'ceph' }}"
+    group: "{{ ceph_uid if containerized_deployment else 'ceph' }}"
+    mode: "{{ ceph_keyring_permissions }}"
+  when:
+    - cephx
+    - copy_admin_key
