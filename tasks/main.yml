@@ -6,6 +6,4 @@
   with_items: "{{ groups['ceph'] }}"
   run_once: true
 
-- include_tasks: admin_keyring.yml
-
 - include_tasks: cephfs_client.yml

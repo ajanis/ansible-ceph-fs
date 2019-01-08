@@ -8,6 +8,7 @@
   register: cluster_uuid
   check_mode: no
   become: false
+
 - name: copy ceph admin keyring
   copy:
     src: "{{ fetch_directory }}/{{ fsid }}/etc/ceph/{{ cluster }}.client.admin.keyring"

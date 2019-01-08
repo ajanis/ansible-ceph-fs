@@ -1,0 +1,7 @@
+- hosts: ceph
+  gather_facts: false
+  become: True
+  tasks:
+    - import_role:
+        name: ceph-fs
+        tasks_from: admin_keyring
