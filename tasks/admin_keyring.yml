@@ -1,4 +1,13 @@
 ---
+- name: read cluster uuid if it already exists
+  command: "cat {{ fetch_directory }}/ceph_cluster_uuid.conf"
+  args:
+    removes: "{{ fetch_directory }}/ceph_cluster_uuid.conf"
+  delegate_to: localhost
+  changed_when: false
+  register: cluster_uuid
+  check_mode: no
+  become: false
 - name: copy ceph admin keyring
   copy:
     src: "{{ fetch_directory }}/{{ fsid }}/etc/ceph/{{ cluster }}.client.admin.keyring"
@@ -7,5 +16,4 @@
     group: "{{ ceph_uid if containerized_deployment else 'ceph' }}"
     mode: "{{ ceph_keyring_permissions }}"
   when:
-    - cephx
     - copy_admin_key
