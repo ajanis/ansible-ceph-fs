@@ -16,3 +16,13 @@
     state: present
     update_cache: yes
   when: ansible_os_family == 'Debian'
+
+
+- name: configure /etc/fstab on clients if not using ldap+automount
+  mount:
+    name: "{{data_mount_root}}"
+    src: "{{ groups['mdss'] | join(':6789,') }}:6789:/"
+    fstype: ceph
+    opts: "defaults"
+    state: mounted
+  when: not use_ldap_automount

@@ -1,1 +1,2 @@
 ---
+use_ldap_automount: False
