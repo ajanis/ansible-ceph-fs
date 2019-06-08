@@ -1,0 +1,14 @@
+[Unit]
+Description=Media Storage at {{ data_mount_root }}
+
+{% if storage_backend == "cephfs" %}
+[Mount]
+What={{ groups['mdss'] | join(':6789,') }}:6789:/ }}
+Where={{ data_mount_root }}
+Type=cephfs
+Options=defaults
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target
+

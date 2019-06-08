@@ -17,6 +17,20 @@
     update_cache: yes
   when: ansible_os_family == 'Debian'
 
+- name: Create systemd files for cephfs mount if using ldap+automount
+  template:
+    src: datamount.mount.j2
+    dest: "/etc/systemd/system/{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
+    mode: 0755
+  when: use_ldap_automount
+  
+- name: Register, Enable, and Start cephfs mount service 
+  systemd:
+    name: "{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  when: use_ldap_automount
 
 - name: configure /etc/fstab on clients if not using ldap+automount
   mount:
