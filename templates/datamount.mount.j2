@@ -1,13 +1,14 @@
 [Unit]
 Description=Media Storage at {{ data_mount_root }}
+After=network-online.target firewalld.service autofs.service nslcd.service
+Wants=network-online.target nslcd.service
+Requires=autofs.service nslcd.service
 
-{% if storage_backend == "cephfs" %}
 [Mount]
 What={{ groups['mdss'] | join(':6789,') }}:6789:/ }}
 Where={{ data_mount_root }}
 Type=cephfs
 Options=defaults
-{% endif %}
 
 [Install]
 WantedBy=multi-user.target
