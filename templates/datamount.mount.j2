@@ -1,8 +1,14 @@
 [Unit]
 Description=Media Storage at {{ data_mount_root }}
+{% if use_ldap_automount %}
 After=network-online.target firewalld.service autofs.service nslcd.service
 Wants=network-online.target nslcd.service
 Requires=autofs.service nslcd.service
+{% else %}
+After=network-online.target firewalld.service autofs.service
+Wants=network-online.target
+Requires=autofs.service
+{% endif %}
 
 [Mount]
 What={{ groups['mdss'] | join(':6789,') }}:6789:/ }}
