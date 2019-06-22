@@ -23,6 +23,12 @@
     dest: "/etc/systemd/system/{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
     mode: 0755
   when: use_ldap_automount
+  notify:
+    - restart nslcd
+    - restart autofs
+  register: systemd_template
+
+- meta: flush_handlers
   
 - name: Register, Enable, and Start cephfs mount service 
   systemd:
@@ -30,7 +36,9 @@
     state: started
     enabled: yes
     daemon_reload: yes
-  when: use_ldap_automount
+  when:
+    - use_ldap_automount
+    - systemd_template is changed
 
 - name: configure /etc/fstab on clients if not using ldap+automount
   mount:
