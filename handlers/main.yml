@@ -1,3 +1,18 @@
-- name: restart autofs
-  service: name=autofs state=restarted
+---
 
+- name: restart autofs
+  service:
+    name: autofs
+    state: restarted
+
+- name: restart nslcd
+  service:
+    name: nslcd
+    state: restarted
+    enabled: yes
+
+- name: restart autofs
+  service:
+    name: autofs
+    state: restarted
+    enabled: yes
