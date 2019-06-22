@@ -13,7 +13,7 @@ Requires=autofs.service
 [Mount]
 What={{ groups['mdss'] | join(':6789,') }}:6789:/ }}
 Where={{ data_mount_root }}
-Type=cephfs
+Type=ceph
 Options=defaults
 
 [Install]
