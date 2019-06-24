@@ -1,5 +1,5 @@
 ---
-- name: [ CephFS ] :: Read Ceph Cluster UUID if it already exists
+- name: "[ CephFS ] :: Read Ceph Cluster UUID if it already exists"
   command: "cat {{ fetch_directory }}/ceph_cluster_uuid.conf"
   args:
     removes: "{{ fetch_directory }}/ceph_cluster_uuid.conf"
@@ -9,7 +9,7 @@
   check_mode: no
   become: false
 
-- name: [ CephFS ] :: Copy Ceph Admin keyring
+- name: "[ CephFS ] :: Copy Ceph Admin keyring"
   copy:
     src: "{{ fetch_directory }}/{{ fsid }}/etc/ceph/{{ cluster }}.client.admin.keyring"
     dest: "/etc/ceph/"

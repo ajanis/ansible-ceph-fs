@@ -1,23 +1,23 @@
 ---
 
-- name: [ CephFS ] :: Create Ceph config directory
+- name: "[ CephFS ] :: Create Ceph config directory"
   file: path=/etc/ceph state=directory
 
-- name: [ CephFS ] :: Add ceph MDS nodes to /etc/hosts
+- name: "[ CephFS ] :: Add ceph MDS nodes to /etc/hosts"
   lineinfile:
     dest: /etc/hosts
     line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ hostvars[item].ansible_hostname }} {{ hostvars[item].ansible_fqdn }}"
     regexp: '^{{ hostvars[item].ansible_default_ipv4.address }}.*'
   with_items: "{{ groups['mdss'] }}"
 
-- name: [ CephFS ] :: Install CephFS Package
+- name: "[ CephFS ] :: Install CephFS Package"
   apt:
     name: ceph-common
     state: present
     update_cache: yes
   when: ansible_os_family == 'Debian'
 
-- name: [ CephFS ] :: Create SystemD files for CephFS mount if using LDAP + AutoFS
+- name: "[ CephFS ] :: Create SystemD files for CephFS mount if using LDAP + AutoFS"
   template:
     src: datamount.mount.j2
     dest: "/etc/systemd/system/{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
@@ -30,7 +30,7 @@
 
 - meta: flush_handlers
   
-- name: [ CephFS ] :: Register, Enable, and Start SystemD Mount for CephFS
+- name: "[ CephFS ] :: Register, Enable, and Start SystemD Mount for CephFS"
   systemd:
     name: "{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
     state: started
@@ -40,7 +40,7 @@
     - use_ldap_automount
     - systemd_template is changed
 
-- name: [ CephFS ] :: Configure /etc/fstab if not using LDAP + AutoFS
+- name: "[ CephFS ] :: Configure /etc/fstab if not using LDAP + AutoFS"
   mount:
     name: "{{data_mount_root}}"
     src: "{{ groups['mdss'] | join(':6789,') }}:6789:/"
