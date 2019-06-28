@@ -25,6 +25,7 @@
   when: use_ldap_automount
   notify:
     - restart nslcd
+    - restart nscd
     - restart autofs
   register: systemd_template
 
