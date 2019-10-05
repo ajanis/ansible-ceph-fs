@@ -3,12 +3,13 @@
 - name: "[ CephFS ] :: Create Ceph config directory"
   file: path=/etc/ceph state=directory
 
-- name: "[ CephFS ] :: Add ceph MDS nodes to /etc/hosts"
-  lineinfile:
-    dest: /etc/hosts
-    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ hostvars[item].ansible_hostname }} {{ hostvars[item].ansible_fqdn }}"
-    regexp: '^{{ hostvars[item].ansible_default_ipv4.address }}.*'
-  with_items: "{{ groups['mdss'] }}"
+#- name: "[ CephFS ] :: Add ceph MDS nodes to /etc/hosts"
+#  lineinfile:
+#    dest: /tmp/hosts
+#    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ hostvars[item].ansible_hostname }} {{ hostvars[item].ansible_fqdn }}"
+#    #regexp: '^{{ hostvars[item].ansible_default_ipv4.address }}.*'
+#    state: present
+#  with_items: "{{ groups['mdss'] }}"
 
 - name: "[ CephFS ] :: Install CephFS Package"
   apt:
