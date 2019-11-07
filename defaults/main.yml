@@ -1,2 +1,3 @@
 ---
 use_ldap_automount: False
+data_mount_root: /cephdata
