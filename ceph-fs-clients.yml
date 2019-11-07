@@ -4,6 +4,4 @@
   become: True
   tasks:
     - import_role:
-        name: ceph-common
-    - import_role:
         name: ceph-fs
