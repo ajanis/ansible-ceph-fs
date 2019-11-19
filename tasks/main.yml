@@ -6,5 +6,5 @@
   with_items: "{{ groups['ceph'] }}"
   when: ansible_lsb.id != "Raspbian"
 
-- include_tasks: cephfs_client.yml
+- import_tasks: cephfs_client.yml
   when: ansible_lsb.id != "Raspbian"
