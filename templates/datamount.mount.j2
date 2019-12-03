@@ -11,7 +11,7 @@ Requires=autofs.service
 {% endif %}
 
 [Mount]
-What={{ groups['mdss'] | join(':6789,') }}:6789:/ }}
+What={% for host in groups['mdss'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/
 Where={{ data_mount_root }}
 Type=ceph
 Options=defaults
