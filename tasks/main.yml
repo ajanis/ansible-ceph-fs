@@ -1,4 +1,5 @@
 ---
+- setup:
 - name: "[ CephFS ] :: Gather facts for all ceph nodes"
   setup:
   delegate_to: "{{ item }}"
