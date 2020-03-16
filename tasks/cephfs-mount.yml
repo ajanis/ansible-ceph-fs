@@ -1,0 +1,48 @@
+---
+
+#- name: "[ CephFS ] :: Create Ceph config directory"
+#  file:
+#    path: /etc/ceph
+#    state: directory
+#
+#- name: "[ CephFS ] :: Install CephFS Package"
+#  apt:
+#    name: ceph-common
+#    state: present
+#    update_cache: yes
+#  when:
+#    - ansible_os_family == 'Debian'
+
+
+- name: "[ CephFS ] :: Create SystemD files for CephFS mount if using LDAP + AutoFS"
+  template:
+    src: datamount.mount.j2
+    dest: "/etc/systemd/system/{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
+    mode: 0755
+  when: use_ldap_automount
+  notify:
+    - restart nslcd
+    - restart nscd
+    - restart autofs
+  register: systemd_template
+
+- meta: flush_handlers
+
+- name: "[ CephFS ] :: Register, Enable, and Start SystemD Mount for CephFS"
+  systemd:
+    name: "{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  when:
+    - use_ldap_automount
+    - systemd_template is changed
+
+- name: "[ CephFS ] :: Configure /etc/fstab if not using LDAP + AutoFS"
+  mount:
+    name: "{{data_mount_root}}"
+    src: "{% for host in groups['mdss'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/"
+    fstype: ceph
+    opts: "defaults"
+    state: mounted
+  when: not use_ldap_automount
