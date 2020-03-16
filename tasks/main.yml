@@ -1,9 +1,10 @@
 ---
-- name: "[ CephFS ] :: Gather facts for all ceph nodes"
+- name: Gather and delegate facts for Ceph nodes
   setup:
-  delegate_to: localhost
+  delegate_to: "{{ item }}"
   delegate_facts: True
-  with_items: "{{ groups['ceph'] }}"
+  loop: "{{ groups['ceph'] | difference(groups.get('clients', [])) }}"
+  run_once: true
   when: ansible_lsb.id != "Raspbian"
 
 - import_tasks: cephfs-mount.yml
