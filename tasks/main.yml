@@ -3,7 +3,7 @@
   setup:
   delegate_to: "{{ item }}"
   delegate_facts: True
-  loop: "{{ groups['ceph'] | difference(groups.get('clients', [])) }}"
+  loop: "{{ groups['ceph'] }}"
   run_once: true
   when: ansible_lsb.id != "Raspbian"
 
