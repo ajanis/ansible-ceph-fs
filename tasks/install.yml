@@ -1,3 +1,9 @@
+- name: Gather and delegate facts for all Ceph nodes
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: True
+  loop: "{{ groups['ceph'] }}"
+  run_once: true
 - name: Install latest ceph dependencies via ceph-ansible
   block:
     - name: Install ansible-tower-cli python package
@@ -25,12 +31,6 @@
 
 - name: Install ceph dependencies from os base repo
   block:
-    - name: Gather and delegate facts for all Ceph nodes
-      setup:
-      delegate_to: "{{ item }}"
-      delegate_facts: True
-      loop: "{{ groups['ceph'] }}"
-      run_once: true
     - name: Create Ceph config directory at /etc/ceph
       file:
         path: /etc/ceph
