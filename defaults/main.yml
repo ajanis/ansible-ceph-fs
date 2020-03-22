@@ -5,7 +5,7 @@ awx_admin_user: admin
 awx_admin_password: "{{ vault_awx_admin_password|default('password') }}"
 
 # Deploy ceph via ansible or os repos
-ceph_deploy_via_ansible: True
+ceph_deploy_via_ansible: False
 
 # LDAP-AutoFS and Mount Options
 use_ldap_automount: False

@@ -4,6 +4,10 @@
   delegate_facts: True
   loop: "{{ groups['ceph'] }}"
   run_once: true
+
+- debug:
+   msg: "Deploying Ceph via ceph-ansible project? : {{ ceph_deploy_via_ansible }}"
+
 - name: Install latest ceph dependencies via ceph-ansible
   block:
     - name: Install ansible-tower-cli python package
@@ -27,7 +31,7 @@
         tower_username: "{{ awx_admin_user }}"
         tower_password: "{{ awx_admin_password }}"
         validate_certs: no
-  when: ceph_deploy_via_ansible | default(False)
+  when: ceph_deploy_via_ansible
 
 - name: Install ceph dependencies from os base repo
   block:
@@ -40,4 +44,4 @@
         name: ceph-common
         state: present
         update_cache: yes
-  when: not ceph_deploy_via_ansible | default(False)
+  when: not ceph_deploy_via_ansible
