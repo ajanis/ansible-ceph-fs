@@ -1,11 +1,7 @@
 ---
-- name: Gather and delegate facts for Ceph nodes
-  setup:
-  delegate_to: "{{ item }}"
-  delegate_facts: True
-  loop: "{{ groups['ceph'] }}"
-  run_once: true
-  when: ansible_lsb.id != "Raspbian"
 
-- import_tasks: cephfs-mount.yml
+- name: Install Ceph client packages and configure mounts
+  block:
+    - import_tasks: install.yml
+    - import_tasks: cephfs-mount.yml
   when: ansible_lsb.id != "Raspbian"
