@@ -1,3 +1,12 @@
 ---
+# AWX vars for deploying ceph-client via ansible
+awx_web_url: "http://awx.example.com:8080"
+awx_admin_user: admin
+awx_admin_password: "{{ vault_awx_admin_password|default('password') }}"
+
+# Deploy ceph via ansible or os repos
+ceph_deploy_via_ansible: True
+
+# LDAP-AutoFS and Mount Options
 use_ldap_automount: False
-data_mount_root: /cephdata
+data_mount_root: /cephfs
