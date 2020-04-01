@@ -1,7 +1,13 @@
 ---
-
-- name: Install Ceph client packages and configure mounts
+- name: Install Ceph client packages
   block:
     - import_tasks: install.yml
+  when:
+    - ansible_lsb.id != "Raspbian"
+    - not ( ansible_os_family == "RedHat" and ansible_distribution_major_version >= "8" )
+
+- name: Configure Ceph mounts
+  block:
     - import_tasks: cephfs-mount.yml
-  when: ansible_lsb.id != "Raspbian"
+  when:
+    - ansible_lsb.id != "Raspbian"
