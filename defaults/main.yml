@@ -8,5 +8,4 @@ awx_admin_password: "{{ vault_awx_admin_password|default('password') }}"
 ceph_deploy_via_ansible: False
 
 # LDAP-AutoFS and Mount Options
-use_ldap_automount: False
 data_mount_root: /cephfs

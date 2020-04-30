@@ -1,6 +1,6 @@
 [Unit]
 Description=Media Storage at {{ data_mount_root }}
-{% if use_ldap_automount %}
+{% if openldap_server_enable_autofs|default(false) %}
 After=network-online.target firewalld.service autofs.service nslcd.service
 Wants=network-online.target nslcd.service
 Requires=autofs.service nslcd.service

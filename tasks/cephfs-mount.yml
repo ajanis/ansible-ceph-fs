@@ -4,7 +4,7 @@
     src: datamount.mount.j2
     dest: "/etc/systemd/system/{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
     mode: 0755
-  when: use_ldap_automount
+  when: openldap_server_enable_autofs|default(false)
   notify:
     - restart nslcd
     - restart nscd
@@ -20,7 +20,7 @@
     enabled: yes
     daemon_reload: yes
   when:
-    - use_ldap_automount
+    - openldap_server_enable_autofs
     - systemd_template is changed
 
 - name: "Configure cephfs volume mounts in /etc/fstab"
@@ -30,4 +30,4 @@
     fstype: ceph
     opts: "defaults"
     state: mounted
-  when: not use_ldap_automount
+  when: not openldap_server_enable_autofs|default(false)
