@@ -18,7 +18,7 @@
       tower_job_launch:
         job_template: "Ceph-Ansible"
         limit: "{{ ansible_host }}"
-        tower_host: "{{ awx_web_url }}"
+        tower_host: "http://10.0.10.25:8080"
         tower_username: "{{ awx_admin_user }}"
         tower_password: "{{ awx_admin_password }}"
         validate_certs: no
@@ -27,7 +27,7 @@
       tower_job_wait:
         job_id: "{{ ceph_run.id }}"
         timeout: 300
-        tower_host: "{{ awx_web_url }}"
+        tower_host: "http://10.0.10.25:8080"
         tower_username: "{{ awx_admin_user }}"
         tower_password: "{{ awx_admin_password }}"
         validate_certs: no
