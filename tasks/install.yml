@@ -1,47 +1,31 @@
-- name: Gather and delegate facts for all Ceph nodes
-  setup:
-  delegate_to: "{{ item }}"
-  delegate_facts: True
-  loop: "{{ groups['ceph'] }}"
-  run_once: true
+---
+- name: Install ceph dependencies from os base repository
+  package:
+    name: ceph-common
+    state: present
+    update_cache: yes
 
-- debug:
-   msg: "Deploying Ceph via ceph-ansible project? : {{ ceph_deploy_via_ansible }}"
+- name: Create Ceph config directory at /etc/ceph
+  file:
+    path: /etc/ceph
+    state: directory
+    owner: ceph
+    group: ceph
 
-- name: Install latest ceph dependencies via ceph-ansible
-  block:
-    - name: Install ansible-tower-cli python package
-      pip:
-        name: ansible-tower-cli
-        state: present
-    - name: Install latest ceph dependencies via ceph-ansible
-      tower_job_launch:
-        job_template: "Ceph-Ansible"
-        limit: "{{ ansible_host }}"
-        tower_host: "http://10.0.10.25:8080"
-        tower_username: "{{ awx_admin_user }}"
-        tower_password: "{{ awx_admin_password }}"
-        validate_certs: no
-      register: ceph_run
-    - name: Wait for ceph-ansible to complete
-      tower_job_wait:
-        job_id: "{{ ceph_run.id }}"
-        timeout: 300
-        tower_host: "http://10.0.10.25:8080"
-        tower_username: "{{ awx_admin_user }}"
-        tower_password: "{{ awx_admin_password }}"
-        validate_certs: no
-  when: ceph_deploy_via_ansible
+- name: Copy Ceph minimal configuration file
+  template:
+    src: ceph.conf.j2
+    dest: /etc/ceph/ceph.conf
+    mode: 0644
+    owner: ceph
+    group: ceph
 
-- name: Install ceph dependencies from os base repo
-  block:
-    - name: Create Ceph config directory at /etc/ceph
-      file:
-        path: /etc/ceph
-        state: directory
-    - name: Install ceph dependencies from os base repository
-      package:
-        name: ceph-common
-        state: present
-        update_cache: yes
-  when: not ceph_deploy_via_ansible
+- name: Copy Ceph client keyring
+  template:
+    src: ceph.client.guest.keyring.j2
+    dest: /etc/ceph/ceph.client.guest.keyring
+    mode: 0600
+    owner: ceph
+    group: ceph
+  tags:
+    - cephfs-keyring
