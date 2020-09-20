@@ -1,0 +1,4 @@
+# minimal ceph.conf for {{ ceph_cluster_fsid }}
+[global]
+    fsid = {{ ceph_cluster_fsid }}
+    mon_host = {% for host in groups['mdss'] %}[v2:{{ hostvars[host]['ansible_default_ipv4']['address'] }}:3300/0,v1:{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789/0]{% if not loop.last %} {% endif %}{% endfor %}
