@@ -1,0 +1,20 @@
+[Unit]
+Description=Media Storage Mount at {{  data_mount_root }}
+{% if openldap_server_enable_autofs|default(false) %}
+After=network-online.target firewalld.service autofs.service nslcd.service
+Wants=network-online.target nslcd.service
+Requires=autofs.service nslcd.service
+{% else %}
+After=network-online.target firewalld.service autofs.service
+Wants=network-online.target
+Requires=autofs.service
+{% endif %}
+
+[Service]
+ExecStart=/bin/mount -t ceph {% for host in groups['mons'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/ {{ data_mount_root }} -o name={{ cephfs_user }},secretfile={{ cephfs_secretfile }}
+RemainAfterExit=yes
+Restart=on-abort
+TimeoutStartSec=60
+
+[Install]
+WantedBy=default.target
