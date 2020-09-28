@@ -1,8 +1,8 @@
 ---
 - name: "Create systemd service files for mounting cephfs volumes. [ldap-autofs]"
   template:
-    src: datamount.mount.j2
-    dest: "/etc/systemd/system/{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
+    src: cephfs.service.j2
+    dest: "/etc/systemd/system/cephfs.service"
     mode: 0755
   when: openldap_server_enable_autofs|default(false)
   notify:
@@ -15,7 +15,7 @@
 
 - name: "Register, enable and start systemd mount service for cephfs volumes. [ldap-autofs]"
   systemd:
-    name: "{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
+    name: "cephfs.service"
     state: started
     enabled: yes
     daemon_reload: yes
@@ -28,6 +28,6 @@
     name: "{{data_mount_root}}"
     src: "{% for host in groups['mdss'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/"
     fstype: ceph
-    opts: "defaults"
+    opts: "name={{ cephfs_user }},secretfile={{ cephfs_secretfile }}"
     state: mounted
   when: not openldap_server_enable_autofs|default(false)
