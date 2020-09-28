@@ -9,3 +9,5 @@ ceph_deploy_via_ansible: False
 
 # LDAP-AutoFS and Mount Options
 data_mount_root: /cephfs
+cephfs_user: guest
+cephfs_secretfile: /etc/ceph/ceph.client.guest.keyring
