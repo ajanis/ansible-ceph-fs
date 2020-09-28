@@ -4,28 +4,3 @@
     name: ceph-common
     state: present
     update_cache: yes
-
-- name: Create Ceph config directory at /etc/ceph
-  file:
-    path: /etc/ceph
-    state: directory
-    owner: ceph
-    group: ceph
-
-- name: Copy Ceph minimal configuration file
-  template:
-    src: ceph.conf.j2
-    dest: /etc/ceph/ceph.conf
-    mode: 0644
-    owner: ceph
-    group: ceph
-
-- name: Copy Ceph client keyring
-  template:
-    src: ceph.client.guest.keyring.j2
-    dest: /etc/ceph/ceph.client.guest.keyring
-    mode: 0600
-    owner: ceph
-    group: ceph
-  tags:
-    - cephfs-keyring
