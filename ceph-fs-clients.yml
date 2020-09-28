@@ -1,7 +1,20 @@
 ---
-- hosts: all
-  gather_facts: true
-  become: True
+- name: "Install Ceph client packages and configure mounts for CephFS"
+  hosts: all
+  remote_user: root
+  gather_facts: yes
+  vars:
+    - shared_storage: true
+    - storage_backend: cephfs
+
+  vars_files:
+    - vault.yml
+
   tasks:
-    - import_role:
-        name: ceph-fs
+    - name: "Install Ceph client packages and CephFS mount configs"
+      block:
+        - import_role:
+            name: ceph-fs
+      when:
+        - shared_storage
+        - storage_backend == "cephfs"
