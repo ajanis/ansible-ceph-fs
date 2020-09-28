@@ -6,15 +6,13 @@
   loop: "{{ groups['mons'] }}"
   run_once: True
 
-- name: Install Ceph client packages
+- name: Install ceph-common and configure ceph-fs
   block:
-    - import_tasks: install.yml
-  when:
-    - ansible_lsb.id != "Raspbian"
-    - not ( ansible_os_family == "RedHat" and ansible_distribution_major_version >= "8" )
-
-- name: Configure Ceph mounts
-  block:
-    - import_tasks: cephfs-mount.yml
+    - name: Install ceph-common and supporting packages
+      import_tasks: install.yml
+    - name: Copy and update Ceph configuration and suppporting files
+      import_tasks: configure.yml
+    - name: Configure ceph mount options
+      import_tasks: cephfs-mount.yml
   when:
     - ansible_lsb.id != "Raspbian"
