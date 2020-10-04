@@ -5,14 +5,22 @@
   delegate_facts: True
   loop: "{{ groups['mons'] }}"
   run_once: True
+  tags:
+    - always
 
 - name: Install ceph-common and configure ceph-fs
   block:
     - name: Install ceph-common and supporting packages
       import_tasks: install.yml
+      tags:
+        - cephfs-install
     - name: Copy and update Ceph configuration and suppporting files
       import_tasks: configure.yml
+      tags:
+        - cephfs-configure
     - name: Configure ceph mount options
       import_tasks: cephfs-mount.yml
+      tags:
+        - cephfs-mount
   when:
     - ansible_lsb.id != "Raspbian"

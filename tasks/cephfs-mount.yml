@@ -10,6 +10,8 @@
     - restart nscd
     - restart autofs
   register: systemd_template
+  tags:
+    - cephfs-systemd
 
 - meta: flush_handlers
 
@@ -22,7 +24,8 @@
   when:
     - openldap_server_enable_autofs
     - systemd_template is changed
-
+  tags:
+    - cephfs-systemd
 - name: "Configure cephfs volume mounts in /etc/fstab"
   mount:
     name: "{{data_mount_root}}"
@@ -31,3 +34,5 @@
     opts: "name={{ cephfs_user }},secretfile={{ cephfs_secretfile }}"
     state: mounted
   when: not openldap_server_enable_autofs|default(false)
+  tags:
+    - cephfs-fstab

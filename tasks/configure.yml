@@ -4,6 +4,10 @@
     state: directory
     owner: ceph
     group: ceph
+  tags:
+    - cephfs-confdir
+    - cephfs-conf
+    - cephfs-keyring
 
 - name: Copy Ceph minimal configuration file
   template:
@@ -12,7 +16,8 @@
     mode: 0644
     owner: ceph
     group: ceph
-
+  tags:
+    - cephfs-conf
 - name: Copy Ceph client keyring
   template:
     src: ceph.client.guest.keyring.j2
