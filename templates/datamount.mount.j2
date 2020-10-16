@@ -1,20 +1,13 @@
 [Unit]
 Description=Media Storage at {{ data_mount_root }}
-{% if openldap_server_enable_autofs|default(false) %}
-After=network-online.target firewalld.service autofs.service nslcd.service
-Wants=network-online.target nslcd.service
-Requires=autofs.service nslcd.service
-{% else %}
-After=network-online.target firewalld.service autofs.service
+After=network-online.target firewalld.service
 Wants=network-online.target
-Requires=autofs.service
-{% endif %}
 
 [Mount]
 What={% for host in groups['mons'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/
 Where={{ data_mount_root }}
 Type=ceph
-Options=defaults
+Options=name={{  cephfs_user }},secret={{ vault_cephfs_user_key }},noatime,_netdev
 
 [Install]
 WantedBy=multi-user.target
