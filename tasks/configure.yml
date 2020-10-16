@@ -18,12 +18,25 @@
     group: ceph
   tags:
     - cephfs-conf
-- name: Copy Ceph client keyring
+
+- name: Copy CephFS User Key
   template:
     src: ceph.client.guest.keyring.j2
-    dest: /etc/ceph/ceph.client.guest.keyring
-    mode: 0600
+    dest: "{{ cephfs_secretfile }}"
+    mode: "{{ ceph_keyring_permissions }}"
     owner: ceph
     group: ceph
+  tags:
+    - cephfs-keyring
+
+- name: Copy Ceph client.admin keyring
+  template:
+    src: ceph.client.admin.keyring.j2
+    dest: "{{ ceph_admin_keyring }}"
+    mode: "{{ ceph_keyring_permissions }}"
+    owner: ceph
+    group: ceph
+  when:
+    - copy_admin_key|default(False)
   tags:
     - cephfs-keyring
