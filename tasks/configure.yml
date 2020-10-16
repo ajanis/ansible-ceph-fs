@@ -1,6 +1,6 @@
-- name: Create Ceph config directory at /etc/ceph
+- name: Create Ceph config directory
   file:
-    path: /etc/ceph
+    path: "{{ ceph_conf_directory }}"
     state: directory
     owner: ceph
     group: ceph
