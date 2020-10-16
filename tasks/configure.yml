@@ -12,7 +12,7 @@
 - name: Copy Ceph minimal configuration file
   template:
     src: ceph.conf.j2
-    dest: /etc/ceph/ceph.conf
+    dest: "{{ ceph_conf_directory }}/{{ceph_cluster_name}}.conf"
     mode: 0644
     owner: ceph
     group: ceph
