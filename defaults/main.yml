@@ -4,10 +4,70 @@ awx_web_url: "http://awx.example.com:8080"
 awx_admin_user: admin
 awx_admin_password: "{{ vault_awx_admin_password|default('password') }}"
 
-# Deploy ceph via ansible or os repos
-ceph_deploy_via_ansible: False
+ceph_cluster_name: ceph
+ceph_conf_directory: /etc/ceph
+ceph_cluster_fsid:
+copy_admin_key: true
+ceph_conf_local: true
+cephfs_user: admin
+cephfs_secretfile: "{{ ceph_conf_directory }}/{{ceph_cluster_name}}.keyring"
+cephfs_user_secret: "{{ vault_cephfs_user_key|default('') }}"
+ceph_cluster_admin: admin
+ceph_admin_secret: "{{ vault_ceph_admin_key|default('') }}"
+ceph_admin_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.client.admin.keyring"
+ceph_keyring_permissions: '0600'
+cephx: true
+ceph_stable_release: octopus
+mon_group_name: mons
+osd_group_name: osds
+rgw_group_name: rgws
+mds_group_name: mdss
+nfs_group_name: nfss
+rbdmirror_group_name: rbdmirrors
+client_group_name: all
+iscsi_gw_group_name: iscsigws
+mgr_group_name: mgrs
 
-# LDAP-AutoFS and Mount Options
-data_mount_root: /cephfs
-cephfs_user: guest
-cephfs_secretfile: /etc/ceph/ceph.client.guest.keyring
+#ceph_origin: repository
+#ceph_repository: default
+
+#ceph_repository: community
+#ceph_mirror: http://download.ceph.com
+#ceph_stable_key: "{{ ceph_mirror }}keys/release.asc"
+#ceph_stable_repo: "{{ ceph_mirror }}/debian-{{ ceph_stable_release }}"
+
+ceph_debian_family_repositories:
+  - bionic
+  - buster
+  - focal
+  - jessie
+  - precise
+  - stretch
+  - trusty
+  - wheezy
+  - xenial
+
+monitor_address_block: 10.0.20.0/24
+ip_version: ipv4
+mon_use_fqdn: false # if set to true, the MON name used will be the fqdn in the ceph.conf
+cephfs: cephfs # name of the ceph filesystem
+cephfs_data: cephfs.cephfs.data # name of the primary data pool for a given filesystem
+cephfs_metadata: cephfs.cephfs.meta # name of the metadata pool for a given filesystem
+cephfs_pools: []
+public_network: 10.0.20.0/24
+cluster_network: "{{ public_network | regex_replace(' ', '') }}"
+
+mds_use_fqdn: false # if set to true, the MDS name used will be the fqdn in the ceph.conf
+mds_max_mds: 3
+
+ceph_conf_overrides:
+  osd:
+    mon_max_pg_per_osd: 250
+    osd_pool_default_pg_num: 1024
+    osd_pool_default_pgp_num: 1024
+    osd_pool_default_pg_autoscale_mode: on
+
+ceph_os_tuning_params:
+  - { name: fs.file-max, value: 26234859 }
+  - { name: vm.zone_reclaim_mode, value: 0 }
+  - { name: vm.swappiness, value: 10 }
