@@ -8,7 +8,7 @@
   tags:
     - always
 
-- name: Install ceph-common and configure ceph-fs
+- name: Install cephadm, install appropriate repositories and latest packages for mounting cephfs
   block:
     - name: Install ceph-common and supporting packages
       import_tasks: install.yml
@@ -24,3 +24,4 @@
         - cephfs-mount
   when:
     - ansible_lsb.id != "Raspbian"
+
