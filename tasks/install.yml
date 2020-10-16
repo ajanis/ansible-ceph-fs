@@ -1,5 +1,5 @@
 ---
-- name: Install ceph dependencies from os base repository
+- name: Install ceph helpers and common deps from os base repository
   package:
     name: ceph-common
     state: present
