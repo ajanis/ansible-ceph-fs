@@ -2,8 +2,8 @@
   file:
     path: "{{ ceph_conf_directory }}"
     state: directory
-    owner: ceph
-    group: ceph
+    owner: "{{ ceph_fs_config_owner }}"
+    group: "{{ ceph_fs_config_group }}"
   tags:
     - cephfs-confdir
     - cephfs-conf
@@ -14,8 +14,8 @@
     src: ceph.conf.j2
     dest: "{{ ceph_conf_directory }}/{{ceph_cluster_name}}.conf"
     mode: 0644
-    owner: ceph
-    group: ceph
+    owner: "{{ ceph_fs_config_owner }}"
+    group: "{{ ceph_fs_config_group }}"
   tags:
     - cephfs-conf
 
@@ -24,8 +24,8 @@
     src: ceph.client.guest.keyring.j2
     dest: "{{ cephfs_secretfile }}"
     mode: "{{ ceph_keyring_permissions }}"
-    owner: ceph
-    group: ceph
+    owner: "{{ ceph_fs_config_owner }}"
+    group: "{{ ceph_fs_config_group }}"
   tags:
     - cephfs-keyring
 
@@ -34,8 +34,8 @@
     src: ceph.client.admin.keyring.j2
     dest: "{{ ceph_admin_keyring }}"
     mode: "{{ ceph_keyring_permissions }}"
-    owner: ceph
-    group: ceph
+    owner: "{{ ceph_fs_config_owner }}"
+    group: "{{ ceph_fs_config_group }}"
   when:
     - copy_admin_key|default(False)
   tags:
