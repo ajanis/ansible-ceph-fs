@@ -28,7 +28,7 @@ client_group_name: all
 iscsi_gw_group_name: iscsigws
 mgr_group_name: mgrs
 
-#ceph_origin: repository
+ceph_origin: repository
 #ceph_repository: default
 
 #ceph_repository: community
