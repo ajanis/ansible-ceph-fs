@@ -1,8 +1,10 @@
 ---
 - name: Install ceph helpers and common deps from os base repository
   package:
-    name: ceph-common
+    name: "{{ ceph_fs_requirements_pkg }}"
     state: present
     update_cache: yes
   tags:
     - cephfs-install
+  when:
+    "ceph_origin == 'repository'"
