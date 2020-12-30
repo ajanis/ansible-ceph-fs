@@ -22,23 +22,25 @@
 - name: Copy CephFS User Key
   template:
     src: ceph.client.guest.keyring.j2
-    dest: "{{ cephfs_secretfile }}"
+    dest: "{{ cephfs_user_keyring }}"
     mode: "{{ ceph_keyring_permissions }}"
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
   when:
-    - ceph_copy_user_key|default(False)
+    - cephx
+    - cephfs_copy_user_key
   tags:
     - cephfs-keyring
 
 - name: Copy Ceph client.admin keyring
   template:
     src: ceph.client.admin.keyring.j2
-    dest: "{{ ceph_admin_keyring }}"
+    dest: "{{ ceph_cluster_admin_keyring }}"
     mode: "{{ ceph_keyring_permissions }}"
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
   when:
-    - ceph_copy_admin_key|default(False)
+    - cephx
+    - ceph_copy_admin_key
   tags:
     - cephfs-keyring
