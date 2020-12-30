@@ -26,6 +26,8 @@
     mode: "{{ ceph_keyring_permissions }}"
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
+  when:
+    - copy_user_key|default(False)
   tags:
     - cephfs-keyring
 
