@@ -11,7 +11,7 @@ Requires=autofs.service
 {% endif %}
 
 [Service]
-ExecStart=/bin/mount -t ceph {% for host in groups['mons'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/ {{ data_mount_root }} -o name={{ cephfs_user }},secretfile={{ cephfs_secretfile }}
+ExecStart=/bin/mount -t ceph {% for host in groups['mons'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/ {{ data_mount_root }} -o {{ cephfs_mount_options }}
 RemainAfterExit=yes
 Restart=on-abort
 TimeoutStartSec=60

@@ -7,7 +7,7 @@ Wants=network-online.target
 What={% for host in groups['mons'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/
 Where={{ data_mount_root }}
 Type=ceph
-Options=name={{  cephfs_user }},secret={{ vault_cephfs_user_key }},noatime,_netdev
+Options={{ cephfs_mount_options }}
 
 [Install]
 WantedBy=multi-user.target
