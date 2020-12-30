@@ -13,7 +13,7 @@ ceph_conf_local: true
 cephfs_user: guest
 cephfs_user_secret: "{{ vault_cephfs_user_secret|default('') }}"
 cephfs_user_keyring: "{{ ceph_conf_directory }}/{{ceph_cluster_name}}.keyring"
-cephfs_mount_options: "name={{ cephfs_user }},secret={{ cephfs_user_secret }},noatime,_netdev"
+cephfs_mount_options: "defaults"
 ceph_cluster_admin: admin
 ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret|default('') }}"
 ceph_cluster_admin_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.client.admin.keyring"
