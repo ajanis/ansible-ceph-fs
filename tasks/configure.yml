@@ -9,7 +9,7 @@
     - cephfs-conf
     - cephfs-keyring
 
-- name: Copy Ceph minimal configuration file
+- name: Generate Ceph config file from template
   template:
     src: ceph.conf.j2
     dest: "{{ ceph_conf_directory }}/{{ceph_cluster_name}}.conf"
