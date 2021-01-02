@@ -3,8 +3,7 @@
   package:
     name: "{{ ceph_fs_requirements_pkg }}"
     state: present
-    update_cache: yes
   tags:
     - cephfs-install
   when:
-    "ceph_origin == 'repository'"
+    - "ceph_origin == 'repository'"
