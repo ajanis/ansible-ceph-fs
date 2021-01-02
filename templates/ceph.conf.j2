@@ -1,36 +1,16 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
 # minimal ceph.conf for {{ ceph_cluster_fsid }}
 
-[global]
-    {% if ceph_cluster_fsid is defined %}
-    fsid = {{ ceph_cluster_fsid }}
-    {% endif %}
+{% for key,value in ceph_conf_overrides.items() %}
+{% if value is mapping %}
+[{{ key }}]
+{% if key == 'global' %}
     mon_host = {% for host in groups['mons'] %}[v2:{{ hostvars[host]['ansible_default_ipv4']['address'] }}:3300/0,v1:{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789/0]{% if not loop.last %} {% endif %}{% endfor %}
-    {% if ceph_auth_client_required is defined %}
-    auth_client_required = {{ ceph_auth_client_required }}
-    {% endif %}
-    {% if ceph_auth_cluster_required is defined %}
-    auth_cluster_required = {{ ceph_auth_cluster_required }}
-    {% endif %}
-    {% if ceph_auth_service_required is defined %}
-    auth_service_required = {{ ceph_auth_serice_required }}
-    {% endif %}
-    {% if ceph_auth_supported is defined %}
-    auth_supported = {{ ceph_auth_supported }}
-    {% endif %}
-    {% if ceph_bluestore_cache_size_hdd is defined %}
-    bluestore_cache_size_hdd = {{ ceph_bluestore_cache_size_hdd }}
-    {% endif %}
-    {% if ceph_mon_max_pg_per_osd is defined %}
-    mon_max_pg_per_osd = {{ ceph_mon_max_pg_per_osd }}
-    {% endif %}
-    {% if ceph_pool_default_pg_num is defined %}
-    pool_default_pg_num = {{ ceph_pool_default_pg_num }}
-    {% endif %}
-    {% if ceph_pool_default_pgp_num is defined %}
-    pool_default_pgp_num = {{ ceph_pool_default_pgp_num }}
-    {% endif %}
 
-[osd]
-    {% if ceph_osd_memory_target is defined %}
-    osd_memory_target = {{ ceph_osd_memory_target }}
-    {% endif %}
+    fsid = {{ ceph_cluster_fsid }}
+{% endif %}
+{% for k,v in value.items() %}
+    {{ k }} = {{ v }}
+{% endfor %}
+{% endif %}
+{% endfor %}
