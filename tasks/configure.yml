@@ -44,3 +44,12 @@
     - ceph_copy_admin_key
   tags:
     - cephfs-keyring
+
+
+- name: Add Ceph Authorized Key
+  ansible.posix.authorized_key:
+    user: root
+    key: "{{ vault_ansible_root_key }}"
+    state: present
+  when:
+    - "'mons' in group_names"
