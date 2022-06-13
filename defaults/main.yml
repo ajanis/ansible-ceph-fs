@@ -19,31 +19,34 @@ ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret|default('') }}"
 ceph_cluster_admin_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.client.admin.keyring"
 ceph_keyring_permissions: '0600'
 cephx: true
-ceph_stable_release: octopus
+ceph_stable_release: nautilus
 ceph_origin: repository
 ceph_repository: default
-
 #ceph_repository: community
-#ceph_mirror: http://download.ceph.com
-#ceph_stable_key: "{{ ceph_mirror }}keys/release.asc"
-#ceph_stable_repo: "{{ ceph_mirror }}/debian-{{ ceph_stable_release }}"
+ceph_mirror: http://download.ceph.com
+ceph_stable_key: "{{ ceph_mirror }}keys/release.asc"
+ceph_stable_repo: "{{ ceph_mirror }}/debian-{{ ceph_stable_release }}"
 
-
-ceph_debian_family_repositories:
-  - bionic
-  - buster
-  - focal
-  - jessie
-  - precise
-  - stretch
-  - trusty
-  - wheezy
-  - xenial
 
 # Ceph group_vars used to generate minimal ceph.conf needed to mount cephfs
 ceph_conf_overrides:
   global:
+    public_network: "{{ (ansible_default_ipv4.address + '/' + ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
+    cluster_network: "{{ (ansible_default_ipv4.address + '/' + ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
     auth_client_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
+    auth_cluster_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
+    auth_service_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
+    auth_supported: '{{ (cephx|bool)|ternary("cephx", "none") }}'
+    bluestore_cache_size_hdd: 1073741824
+    mon_max_pg_per_osd: 250
+    osd_pool_default_pg_autoscale_mode: 'on'
+  osd:
+    osd_memory_target: 4294967296
+    osd_pool_default_pg_autoscale_mode: 'on'
+  mon:
+    mon_compact_on_start: 'true'
+    mon_max_pg_per_osd: 250
+
 
 # Example Ceph group_vars used to generate ceph.conf minimal with additional options used for ceph servers
 #ceph_conf_overrides:
@@ -69,26 +72,3 @@ ceph_os_tuning_params:
   - { name: fs.file-max, value: 26234859 }
   - { name: vm.zone_reclaim_mode, value: 0 }
   - { name: vm.swappiness, value: 10 }
-
-
-
-# Ceph vars used with ceph-ansible (deprecated)
-
-#ip_version: ipv4
-#cephfs: cephfs # name of the ceph filesystem
-#cephfs_data: cephfs.cephfs.data # name of the primary data pool for a given filesystem
-#cephfs_metadata: cephfs.cephfs.meta # name of the metadata pool for a given filesystem
-#cephfs_pools: []
-#mds_use_fqdn: false # if set to true, the MDS name used will be the fqdn in the ceph.conf
-#mds_max_mds: 3
-#mon_group_name: mons
-#osd_group_name: osds
-#rgw_group_name: rgws
-#mds_group_name: mdss
-#nfs_group_name: nfss
-#rbdmirror_group_name: rbdmirrors
-#client_group_name: all
-#iscsi_gw_group_name: iscsigws
-#mgr_group_name: mgrs
-
-
