@@ -1,9 +1,22 @@
 ---
-- name: Install ceph helpers and common deps from os base repository
+
+- name: "Download cephadm utility for {{ ceph_stable_release }}"
+  get_url:
+    url: "https://github.com/ceph/ceph/raw/{{ ceph_stable_release }}/src/cephadm/cephadm"
+    dest: /usr/local/bin/cephadm
+    mode: '0755'
+  when:
+    - ceph_repository == "default"
+
+- name: "Install repository for Ceph {{ ceph_stable_release }}"
+  shell:
+    cmd: "/usr/local/bin/cephadm add-repo --release {{ ceph_stable_release }}"
+  when:
+    - ceph_repository == "default"
+
+- name: Install ceph helpers and common deps
   package:
     name: "{{ ceph_fs_requirements_pkg }}"
     state: present
   tags:
     - cephfs-install
-  when:
-    - "ceph_origin == 'repository'"
