@@ -4,7 +4,7 @@ After=network-online.target firewalld.service
 Wants=network-online.target
 
 [Mount]
-What={% for host in groups['mons'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/
+What={% for host in groups['mons'] %}{{ hostvars[host]['ansible_ssh_host'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/
 Where={{ data_mount_root }}
 Type=ceph
 Options={{ cephfs_mount_options }}
