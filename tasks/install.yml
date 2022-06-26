@@ -2,7 +2,7 @@
 
 - name: "Download cephadm utility for {{ ceph_stable_release }}"
   get_url:
-    url: "https://github.com/ceph/ceph/raw/{{ ceph_stable_release }}/src/cephadm/cephadm"
+    url: 'https://github.com/ceph/ceph/raw/{{ ceph_stable_release }}/src/cephadm/cephadm'
     dest: /usr/local/bin/cephadm
     mode: '0755'
   when:
