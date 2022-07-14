@@ -1,5 +1,4 @@
 ---
-
 - name: "Download cephadm utility for {{ ceph_stable_release }}"
   get_url:
     url: 'https://github.com/ceph/ceph/raw/{{ ceph_stable_release }}/src/cephadm/cephadm'
