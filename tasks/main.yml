@@ -31,5 +31,5 @@
       tags:
         - cephfs-mount
   when:
-    - ansible_lsb.id != "Raspbian"
+    - ansible_distribution != "Raspbian"
 
