@@ -49,7 +49,7 @@
 - name: Add Ceph Authorized Key
   ansible.posix.authorized_key:
     user: root
-    key: "{{ vault_ansible_root_key }}"
+    key: "{{ ceph_root_ssh_key }}"
     state: present
   when:
     - "'mons' in group_names"
