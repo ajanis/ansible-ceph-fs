@@ -5,9 +5,11 @@
 {% if value is mapping %}
 [{{ key }}]
 {% if key == 'global' %}
+    fsid = {{ ceph_cluster_fsid }}
+
     mon_host = {% for host in groups['mons'] %}[v2:{{ hostvars[host]['ansible_ssh_host'] }}:3300/0,v1:{{ hostvars[host]['ansible_ssh_host'] }}:6789/0]{% if not loop.last %} {% endif %}
 {% endfor %}
-    fsid = {{ ceph_cluster_fsid }}
+
 {% endif %}
 {% for k,v in value.items() %}
     {{ k }} = {{ v }}
