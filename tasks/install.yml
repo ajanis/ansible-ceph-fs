@@ -4,7 +4,7 @@
     name: "{{ ceph_pkgs }}"
     state: present
   when:
-    - ceph_repository == "default"
+    - ceph_origin == "default"
   tags:
     - ceph-os-install
 
@@ -39,5 +39,5 @@
       tags:
         - cephadm-install
   when:
-    - ceph_repository == "repository"
+    - ceph_origin == "repository"
 
