@@ -2,5 +2,5 @@
 ceph_fs_requirements_pkg: ceph-common
 ceph_fs_config_owner: ceph
 ceph_fs_config_group: ceph
-ceph_stable_release: quincy
+ceph_stable_release: octopus
 ceph_origin: repository
