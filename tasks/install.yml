@@ -1,21 +1,43 @@
 ---
-- name: "Download cephadm utility for {{ ceph_stable_release }}"
-  get_url:
-    url: 'https://github.com/ceph/ceph/raw/{{ ceph_stable_release }}/src/cephadm/cephadm'
-    dest: /usr/local/bin/cephadm
-    mode: '0755'
-  when:
-    - ceph_repository == "default"
-
-- name: "Install repository for Ceph {{ ceph_stable_release }}"
-  shell:
-    cmd: "/usr/local/bin/cephadm add-repo --release {{ ceph_stable_release }}"
-  when:
-    - ceph_repository == "default"
-
-- name: Install ceph helpers and common deps
+- name: "Install ceph pkgs from os repo"
   package:
-    name: "{{ ceph_fs_requirements_pkg }}"
+    name: "{{ ceph_pkgs }}"
     state: present
+  when:
+    - ceph_repository == "default"
   tags:
-    - cephfs-install
+    - ceph-os-install
+
+- name: "Install Ceph packages via cephadm"
+  block:
+    - name: Install podman
+      package:
+        name: "{{ podman_pkg }}"
+        state: present
+      tags:
+        - podman-install
+    - name: "Download cephadm utility for {{ ceph_stable_release }}"
+      get_url:
+        url: 'https://github.com/ceph/ceph/raw/{{ ceph_stable_release }}/src/cephadm/cephadm'
+        dest: "{{ cephadm_path }}"
+        mode: '0755'
+      tags:
+        - cephadm-install
+    - name: "Prepare host for cephadm use"
+      shell:
+        cmd: "{{ cephadm_path }} prepare-host"
+      tags:
+        - cephadm-install
+    - name: "Install repository for Ceph {{ ceph_stable_release }}"
+      shell:
+        cmd: "{{ cephadm_path }} add-repo {{ ceph_stable_release }}"
+      tags:
+        - cephadm-install
+    - name: "Install Ceph packages via cephadm"
+      shell:
+        cmd: "{{ cephadm_path }} install {{ ceph_pkgs }}"
+      tags:
+        - cephadm-install
+  when:
+    - ceph_repository == "repository"
+
