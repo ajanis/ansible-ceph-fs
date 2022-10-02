@@ -24,9 +24,9 @@ ceph_origin: repository
 ceph_repository: default
 #ceph_repository: community
 ceph_mirror: http://download.ceph.com
-ceph_stable_key: "{{ ceph_mirror }}keys/release.asc"
+ceph_stable_key: "{{ ceph_mirror }}/keys/release.asc"
 ceph_stable_repo: "{{ ceph_mirror }}/debian-{{ ceph_stable_release }}"
-
+cephadm_path: /usr/local/bin/cephadm
 
 # Ceph group_vars used to generate minimal ceph.conf needed to mount cephfs
 ceph_conf_overrides:
