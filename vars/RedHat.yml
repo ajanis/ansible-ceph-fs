@@ -1,6 +1,9 @@
 ---
 ceph_stable_release: nautilus
-ceph_fs_requirements_pkg: ceph-common
+ceph_pkgs:
+  - ceph-common
+podman_pkg:
+  - podman
 ceph_fs_config_owner: root
 ceph_fs_config_group: root
 ceph_origin: repository
