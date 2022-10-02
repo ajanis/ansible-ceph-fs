@@ -1,6 +1,6 @@
 ---
 - name: "Install ceph pkgs from os repo"
-  package:
+  ansible.builtin.package:
     name: "{{ ceph_pkgs }}"
     state: present
   when:
