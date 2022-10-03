@@ -29,3 +29,7 @@
     - ansible_os_family == "RedHat"
     - ceph_origin == "repository"
 
+- name: "Install Ceph packages"
+  ansible.builtin.package:
+    name: "{{ ceph_pkgs }}"
+    state: present
