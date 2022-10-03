@@ -20,8 +20,6 @@
   block:
     - name: Install ceph-common and supporting packages
       import_tasks: install.yml
-      tags:
-        - cephfs-install
     - name: Copy and update Ceph configuration and suppporting files
       import_tasks: configure.yml
       tags:
