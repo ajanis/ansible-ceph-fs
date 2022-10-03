@@ -1,26 +1,31 @@
 ---
-
-
-- name: "Install Ceph packages via cephadm"
+- name: "Install Ceph Repository and GPG Key"
   block:
-    - name: "Download cephadm utility for {{ ceph_stable_release }}"
-      ansible.builtin.get_url:
-        url: 'https://github.com/ceph/ceph/raw/{{ ceph_stable_release }}/src/cephadm/cephadm'
-        dest: "{{ cephadm_path }}"
-        mode: '0755'
-      tags:
-        - cephadm-install
+    - name: "Add gpg key for Ceph repository"
+      ansible.builtin.apt_key:
+        url: "{{ ceph_stable_key }}"
+        state: present
     - name: "Install repository for Ceph {{ ceph_stable_release }}"
-      ansible.builtin.command:
-        cmd: "{{ cephadm_path }} add-repo --release {{ ceph_stable_release }}"
-      tags:
-        - cephadm-install
-    - name: "Install Ceph packages via cephadm"
-      ansible.builtin.command:
-        cmd: "{{ cephadm_path }} install {{ item }}"
-      loop: "{{ ceph_pkgs }}"
-      tags:
-        - cephadm-install
+      ansible.builtin.apt_repository:
+        repo: "deb {{ ceph_stable_deb_repo }}/ {{ ansible_distribution_release }} main"
+        state: present
+        filename: ceph
   when:
+    - ansible_os_family == "Debian"
+    - ceph_origin == "repository"
+
+ 
+- name: "Install Ceph Repository and GPG Key"
+  block:
+    - name: "Add repository and key for {{ ceph_stable_release }}"
+      yum_repository:
+        name: ceph
+        description: "Ceph {{ ceph_stable_release }} Repository"
+        baseurl: "{{ ceph_stable_rpm_repo }}/el{{ ansible_distribution_major_version }}/$basearch"
+        gpgkey: "{{ ceph_stable_key }}"
+        gpgcheck: yes
+        state: present
+  when:
+    - ansible_os_family == "RedHat"
     - ceph_origin == "repository"
 
