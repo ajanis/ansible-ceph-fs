@@ -1,8 +1,6 @@
 ---
 ceph_pkgs:
   - ceph-common
-podman_pkg:
-  - podman
 ceph_fs_config_owner: ceph
 ceph_fs_config_group: ceph
 ceph_stable_release: octopus
