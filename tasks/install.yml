@@ -1,12 +1,5 @@
 ---
-- name: "Install ceph pkgs from os repo"
-  ansible.builtin.package:
-    name: "{{ ceph_pkgs }}"
-    state: present
-  when:
-    - ceph_origin == "default"
-  tags:
-    - ceph-os-install
+
 
 - name: "Install Ceph packages via cephadm"
   block:
