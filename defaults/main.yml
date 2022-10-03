@@ -19,14 +19,12 @@ ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret|default('') }}"
 ceph_cluster_admin_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.client.admin.keyring"
 ceph_keyring_permissions: '0600'
 cephx: true
-ceph_stable_release: nautilus
-ceph_origin: repository
-ceph_repository: default
-#ceph_repository: community
-ceph_mirror: http://download.ceph.com
+ceph_stable_release: octopus
+ceph_origin: repository # use 'repository' for ceph repo and 'default' for os repo
+ceph_mirror: https://download.ceph.com
 ceph_stable_key: "{{ ceph_mirror }}/keys/release.asc"
-ceph_stable_repo: "{{ ceph_mirror }}/debian-{{ ceph_stable_release }}"
-cephadm_path: /usr/local/bin/cephadm
+ceph_stable_deb_repo: "{{ ceph_mirror }}/debian-{{ ceph_stable_release }}"
+ceph_stable_rpm_repo: "{{ ceph_mirror }}/rpm-{{ ceph_stable_release }}"
 
 # Ceph group_vars used to generate minimal ceph.conf needed to mount cephfs
 ceph_conf_overrides:
