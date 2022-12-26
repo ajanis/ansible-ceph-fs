@@ -15,6 +15,7 @@
   run_once: True
   tags:
     - always
+  when: 
 
 - name: Install cephadm, install appropriate repositories and latest packages for mounting cephfs
   block:

@@ -1,9 +1,21 @@
+- name: Set sysctl tuning parameters
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    ignoreerrors: false
+    reload: true
+    sysctl_file: /etc/sysctl.conf
+    sysctl_set: true
+  loop: "{{ ceph_os_tuning_params }}"
+
 - name: Create Ceph config directory
   file:
     path: "{{ ceph_conf_directory }}"
     state: directory
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
+    mode: 0644
   tags:
     - cephfs-confdir
     - cephfs-conf
