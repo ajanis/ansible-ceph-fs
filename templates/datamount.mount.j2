@@ -1,13 +1,13 @@
 [Unit]
-Description=Media Storage at {{ data_mount_root }}
+Description=Media Storage at {{ cephfs_mount.mount }}
 After=network-online.target firewalld.service
 Wants=network-online.target
 
 [Mount]
-What={% for host in groups['mons'] %}{{ hostvars[host]['ansible_ssh_host'] }}:6789{% if not loop.last %},{% endif %}{% endfor %}:/
-Where={{ data_mount_root }}
+What={% for host in cephfs_mount.mds %}{{ host }}{% if not loop.last %},{% endif %}{% endfor %}:/
+Where={{ cephfs_mount.mount }}
 Type=ceph
-Options={{ cephfs_mount_options }}
+Options=name={{ cephfs_mount.user }},secret={{ cephfs_mount.secret }},noatime,_netdev
 
 [Install]
 WantedBy=multi-user.target
