@@ -26,6 +26,25 @@ ceph_stable_key: "{{ ceph_mirror }}/keys/release.asc"
 ceph_stable_deb_repo: "{{ ceph_mirror }}/debian-{{ ceph_stable_release }}"
 ceph_stable_rpm_repo: "{{ ceph_mirror }}/rpm-{{ ceph_stable_release }}"
 
+cephfs_mounts: []
+  # - mount: /cephfs01
+  #   mds:
+  #     - mds01
+  #     - mds02
+  #     - mds03
+  #     - mds04
+  #   user: admin
+  #   secret: "{{ cephfs_data_secret|default('admin') }}"
+  # - mount: /cephfs02
+  #   mds:
+  #     - mds05
+  #     - mds06
+  #     - mds07
+  #     - mds08
+  #   user: admin
+  #   secret: "{{ cephfs_media_secret|default('admin') }}"
+
+
 # Ceph group_vars used to generate minimal ceph.conf needed to mount cephfs
 ceph_conf_overrides:
   global:
