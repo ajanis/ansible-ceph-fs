@@ -2,9 +2,13 @@
 - name: "Create systemd service files for mounting cephfs volumes. [ldap-autofs]"
   template:
     src: datamount.mount.j2
-    dest: "/etc/systemd/system/{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
+    dest: "/etc/systemd/system/{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
     mode: 0644
-  when: openldap_server_enable_autofs|default(false)
+  loop: "{{ cephfs_mounts }}"
+  loop_control:
+    label: "{{ cephfs_mount.mount }}"
+    loop_var: cephfs_mount
+  when: cephfs_mounts | length > 0
   notify:
     - restart nslcd
     - restart nscd
@@ -17,12 +21,16 @@
 
 - name: "Register, enable and start systemd mount service for cephfs volumes. [ldap-autofs]"
   systemd:
-    name: "{{ data_mount_root | regex_replace('^\\/', '') }}.mount"
+    name: "{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
     state: started
     enabled: yes
     daemon_reload: yes
+  loop: "{{ cephfs_mounts }}"
+  loop_control:
+    label: "{{ cephfs_mount.mount }}"
+    loop_var: cephfs_mount
   when:
-    - openldap_server_enable_autofs
+    - cephfs_mounts | length > 0
     - systemd_template is changed
   tags:
     - cephfs-systemd
