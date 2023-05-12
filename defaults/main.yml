@@ -3,7 +3,8 @@
 awx_web_url: "http://awx.example.com:8080"
 awx_admin_user: admin
 awx_admin_password: "{{ vault_awx_admin_password|default('password') }}"
-
+ceph_pkgs:
+ceph_prereq_pkgs:
 ceph_cluster_name: ceph
 ceph_conf_directory: /etc/ceph
 ceph_cluster_fsid:
