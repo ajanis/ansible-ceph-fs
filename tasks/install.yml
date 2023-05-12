@@ -29,7 +29,7 @@
     - ansible_os_family == "RedHat"
     - ceph_origin == "repository"
 
-- name: "Install Ceph Prereq Packages (RHEL)"
+- name: "Install Ceph Prereq Packages"
   ansible.builtin.package:
     name: "{{ ceph_prereq_pkgs }}"
     state: present
