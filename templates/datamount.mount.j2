@@ -4,10 +4,10 @@ After=network-online.target firewalld.service
 Wants=network-online.target
 
 [Mount]
-What={% for host in cephfs_mount.mds %}{{ host }}{% if not loop.last %},{% endif %}{% endfor %}:/
+What={{ cephfs_mount.user }}@{{ cephfs_mount.fsid }}.{{ cephfs_mount.fsname }}=/
 Where={{ cephfs_mount.mount }}
 Type=ceph
-Options=name={{ cephfs_mount.user }},secret={{ cephfs_mount.secret }},noatime,_netdev
+Options=name={{ cephfs_mount.user }},secret={{ cephfs_mount.secret }},noatime,_netdev,ms_mode=prefer-crc,key={{ cephfs_mount.user }},mon_addr={% for host in cephfs_mount.mon %}{{ host }}:3300{% if not loop.last %}/{% endif %}{% endfor %}
 
 [Install]
 WantedBy=multi-user.target
