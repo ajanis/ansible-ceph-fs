@@ -1,9 +1,9 @@
 ---
 - name: "Create systemd service files for mounting cephfs volumes. [ldap-autofs]"
-  template:
+  ansible.builtin.template:
     src: datamount.mount.j2
     dest: "/etc/systemd/system/{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
-    mode: 0644
+    mode: '0644'
   loop: "{{ cephfs_mounts }}"
   loop_control:
     label: "{{ cephfs_mount.mount }}"
@@ -17,14 +17,15 @@
   tags:
     - cephfs-systemd
 
-- meta: flush_handlers
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: "Register, enable and start systemd mount service for cephfs volumes. [ldap-autofs]"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
     state: started
-    enabled: yes
-    daemon_reload: yes
+    enabled: true
+    daemon_reload: true
   loop: "{{ cephfs_mounts }}"
   loop_control:
     label: "{{ cephfs_mount.mount }}"
