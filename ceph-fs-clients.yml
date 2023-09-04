@@ -2,19 +2,15 @@
 - name: "Install Ceph client packages and configure mounts for CephFS"
   hosts: all
   remote_user: root
-  gather_facts: yes
-  vars:
-    - shared_storage: true
-    - storage_backend: cephfs
+  gather_facts: true
 
   vars_files:
     - vault.yml
 
   tasks:
     - name: "Install Ceph client packages and CephFS mount configs"
-      block:
-        - import_role:
-            name: ceph-fs
+      ansible.builtin.import_role:
+        name: ceph-fs
       when:
         - shared_storage
         - storage_backend == "cephfs"

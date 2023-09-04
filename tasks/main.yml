@@ -1,34 +1,32 @@
 ---
-- name: include os specific vars
-  include_vars: "{{ item }}"
+- name: Include os specific vars
+  ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - "{{ ansible_distribution }}{{ ansible_distribution_major_version }}.yml"
     - "{{ ansible_os_family }}.yml"
   tags:
     - always
 
-- name: gather facts from ceph servers
-  setup:
+- name: Gather facts from ceph servers
+  ansible.builtin.setup:
   delegate_to: "{{ item }}"
-  delegate_facts: True
+  delegate_facts: true
   loop: "{{ groups['mons'] }}"
-  run_once: True
+  run_once: true
   tags:
     - always
-  when: 
 
 - name: Install cephadm, install appropriate repositories and latest packages for mounting cephfs
+  when:
+    - ansible_distribution != "Raspbian"
   block:
     - name: Install ceph-common and supporting packages
-      import_tasks: install.yml
+      ansible.builtin.import_tasks: install.yml
     - name: Copy and update Ceph configuration and suppporting files
-      import_tasks: configure.yml
+      ansible.builtin.import_tasks: configure.yml
       tags:
         - cephfs-configure
     - name: Configure ceph mount options
-      import_tasks: cephfs-mount.yml
+      ansible.builtin.import_tasks: cephfs-mount.yml
       tags:
         - cephfs-mount
-  when:
-    - ansible_distribution != "Raspbian"
-

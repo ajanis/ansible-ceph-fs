@@ -1,5 +1,5 @@
 - name: Set sysctl tuning parameters
-  sysctl:
+  ansible.posix.sysctl:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     state: present
@@ -10,29 +10,29 @@
   loop: "{{ ceph_os_tuning_params }}"
 
 - name: Create Ceph config directory
-  file:
+  ansible.builtin.file:
     path: "{{ ceph_conf_directory }}"
     state: directory
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
-    mode: 0644
+    mode: '0644'
   tags:
     - cephfs-confdir
     - cephfs-conf
     - cephfs-keyring
 
 - name: Generate Ceph config file from template
-  template:
+  ansible.builtin.template:
     src: ceph.conf.j2
-    dest: "{{ ceph_conf_directory }}/{{ceph_cluster_name}}.conf"
-    mode: 0644
+    dest: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.conf"
+    mode: '0644'
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
   tags:
     - cephfs-conf
 
 - name: Copy CephFS User Key
-  template:
+  ansible.builtin.template:
     src: ceph.client.guest.keyring.j2
     dest: "{{ cephfs_user_keyring }}"
     mode: "{{ ceph_keyring_permissions }}"
@@ -45,7 +45,7 @@
     - cephfs-keyring
 
 - name: Copy Ceph client.admin keyring
-  template:
+  ansible.builtin.template:
     src: ceph.client.admin.keyring.j2
     dest: "{{ ceph_cluster_admin_keyring }}"
     mode: "{{ ceph_keyring_permissions }}"
