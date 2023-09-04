@@ -2,9 +2,9 @@
 # AWX vars for deploying ceph-client via ansible
 awx_web_url: "http://awx.example.com:8080"
 awx_admin_user: admin
-awx_admin_password: "{{ vault_awx_admin_password|default('password') }}"
-ceph_pkgs:
-ceph_prereq_pkgs:
+awx_admin_password: "{{ vault_awx_admin_password | default('password') }}"
+ceph_pkgs: []
+ceph_prereq_pkgs: []
 ceph_cluster_name: ceph
 ceph_conf_directory: /etc/ceph
 ceph_cluster_fsid:
@@ -12,11 +12,11 @@ ceph_copy_admin_key: false
 cephfs_copy_user_key: true
 ceph_conf_local: true
 cephfs_user: guest
-cephfs_user_secret: "{{ vault_cephfs_user_secret|default('') }}"
-cephfs_user_keyring: "{{ ceph_conf_directory }}/{{ceph_cluster_name}}.keyring"
+cephfs_user_secret: "{{ vault_cephfs_user_secret | default('') }}"
+cephfs_user_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.keyring"
 cephfs_mount_options: "defaults"
 ceph_cluster_admin: admin
-ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret|default('') }}"
+ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret | default('') }}"
 ceph_cluster_admin_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.client.admin.keyring"
 ceph_keyring_permissions: '0600'
 cephx: true
@@ -51,10 +51,10 @@ ceph_conf_overrides:
   global:
     public_network: "{{ (ansible_default_ipv4.address + '/' + ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
     cluster_network: "{{ (ansible_default_ipv4.address + '/' + ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
-    auth_client_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
-    auth_cluster_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
-    auth_service_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
-    auth_supported: '{{ (cephx|bool)|ternary("cephx", "none") }}'
+    auth_client_required: '{{ (cephx | bool) | ternary("cephx", "none") }}'
+    auth_cluster_required: '{{ (cephx | bool) | ternary("cephx", "none") }}'
+    auth_service_required: '{{ (cephx | bool) | ternary("cephx", "none") }}'
+    auth_supported: '{{ (cephx | bool) | ternary("cephx", "none") }}'
     bluestore_cache_size_hdd: 1073741824
     mon_max_pg_per_osd: 250
     osd_pool_default_pg_autoscale_mode: 'on'
@@ -67,23 +67,23 @@ ceph_conf_overrides:
 
 
 # Example Ceph group_vars used to generate ceph.conf minimal with additional options used for ceph servers
-#ceph_conf_overrides:
-#  global:
-#    public_network: "{{ (ansible_default_ipv4.address + '/' + ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
-#    cluster_network: "{{ (ansible_default_ipv4.address + '/' + ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
-#    auth_client_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
-#    auth_cluster_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
-#    auth_service_required: '{{ (cephx|bool)|ternary("cephx", "none") }}'
-#    auth_supported: '{{ (cephx|bool)|ternary("cephx", "none") }}'
-#    bluestore_cache_size_hdd: 1073741824
-#    mon_max_pg_per_osd: 250
-#    osd_pool_default_pg_autoscale_mode: 'on'
-#  osd:
-#    osd_memory_target: 4294967296
-#    osd_pool_default_pg_autoscale_mode: 'on'
-#  mon:
-#    mon_compact_on_start: 'true'
-#    mon_max_pg_per_osd: 250
+# ceph_conf_overrides:
+#   global:
+#     public_network: "{{ (ansible_default_ipv4.address + '/' + ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
+#     cluster_network: "{{ (ansible_default_ipv4.address + '/' + ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
+#     auth_client_required: '{{ (cephx | bool) | ternary("cephx", "none") }}'
+#     auth_cluster_required: '{{ (cephx | bool) | ternary("cephx", "none") }}'
+#     auth_service_required: '{{ (cephx | bool) | ternary("cephx", "none") }}'
+#     auth_supported: '{{ (cephx | bool) | ternary("cephx", "none") }}'
+#     bluestore_cache_size_hdd: 1073741824
+#     mon_max_pg_per_osd: 250
+#     osd_pool_default_pg_autoscale_mode: 'on'
+#   osd:
+#     osd_memory_target: 4294967296
+#     osd_pool_default_pg_autoscale_mode: 'on'
+#   mon:
+#     mon_compact_on_start: 'true'
+#     mon_max_pg_per_osd: 250
 
 # Ceph sysctl performance tuning parameters
 ceph_os_tuning_params:
