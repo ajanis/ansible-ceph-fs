@@ -8,7 +8,7 @@
   loop_control:
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
-  when: cephfs_mounts | length > 0
+  when: (cephfs_mounts | default([])) | length > 0
   notify:
     - restart nslcd
     - restart nscd
@@ -31,7 +31,7 @@
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
   when:
-    - cephfs_mounts | length > 0
+    - (cephfs_mounts | default([])) | length > 0
     - systemd_template is changed
   tags:
     - cephfs-systemd
