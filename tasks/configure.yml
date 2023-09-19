@@ -21,6 +21,7 @@
     - cephfs-conf
     - cephfs-keyring
 
+
 - name: Generate Ceph config file from template
   ansible.builtin.template:
     src: ceph.conf.j2
@@ -33,7 +34,7 @@
 
 - name: Copy CephFS User Key
   ansible.builtin.template:
-    src: ceph.client.guest.keyring.j2
+    src: test.secret.j2
     dest: "{{ cephfs_user_keyring }}"
     mode: "{{ ceph_keyring_permissions }}"
     owner: "{{ ceph_fs_config_owner }}"
@@ -43,19 +44,23 @@
     - cephfs_copy_user_key
   tags:
     - cephfs-keyring
+  loop: "{{ cephfs_mounts }}"
+  loop_control:
+    label: "{{ cephfs_mount.mount }}"
+    loop_var: cephfs_mount
 
-- name: Copy Ceph client.admin keyring
-  ansible.builtin.template:
-    src: ceph.client.admin.keyring.j2
-    dest: "{{ ceph_cluster_admin_keyring }}"
-    mode: "{{ ceph_keyring_permissions }}"
-    owner: "{{ ceph_fs_config_owner }}"
-    group: "{{ ceph_fs_config_group }}"
-  when:
-    - cephx
-    - ceph_copy_admin_key
-  tags:
-    - cephfs-keyring
+# - name: Copy Ceph client.admin keyring
+#   ansible.builtin.template:
+#     src: ceph.client.admin.keyring.j2
+#     dest: "{{ ceph_conf_directory }}/{{ item.fsid }}.{{ item.user }}.secret"
+#     mode: "{{ ceph_keyring_permissions }}"
+#     owner: "{{ ceph_fs_config_owner }}"
+#     group: "{{ ceph_fs_config_group }}"
+#   when:
+#     - cephx
+#     - ceph_copy_admin_key
+#   tags:
+#     - cephfs-keyring
 
 
 - name: Add Ceph Authorized Key

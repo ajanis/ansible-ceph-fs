@@ -1,20 +1,7 @@
 #jinja2: trim_blocks: True, lstrip_blocks: True
-# minimal ceph.conf for {{ ceph_cluster_fsid }}
-
-{% for section in cephactual_conf_overrides: %}
-[{{ section }}]
-{% for key,value in section.items() %}
-{% if key is not mapping %}
-{% if key is sequence and value is not string %}
-  {{ key }} = {{ value|join(' ') }}
-  {% else %}
-  {{ key }} = {{ value }}
-  {% endif %}
-  {% else %}
-[{{ key }}.{{ value }}]
-{% endif %}
-{% for k,v in key.items() %}
-  {{ k }} = {{ v }}
+{% for component in cephactual_config_file %}
+[{{ component }}]
+    {% for config in cephactual_config_file[component] | list %}
+        {{ config }} = {{ cephactual_config_file[component][config] }} 
+    {% endfor %}
 {% endfor %}
-{% endfor %}
-
