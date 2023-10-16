@@ -10,7 +10,7 @@
 - name: Create CephFS Mount-User SecretFile
   ansible.builtin.template:
     src: cephfs_user_secret.j2
-    dest: "{{ ceph_mountconfig_directory }}/{{ cephfs_mount.fsid }}.{{ cephfs_mount.user }}.secret"
+    dest: "{{ cephfs_mount.secretfile }}"
     mode: "{{ ceph_keyring_permissions }}"
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
@@ -20,8 +20,7 @@
     loop_var: cephfs_mount
   when: (cephfs_mounts | default([])) | length > 0
 
-- name: 'Create systemd service files for mounting cephfs volumes. [ldap-autofs]'
-  ansible.builtin.template:
+- name: 'Create systemd service files for mounting cephfs volumes. [ldap-autofs]' ansible.builtin.template:
     src: datamount.mount.j2
     dest: "{{ ceph_conf_directory }}/{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
     mode: "{{ ceph_keyring_permissions }}"
