@@ -42,15 +42,15 @@
   when:
     - ceph_cephfs_copy_user_key
 
- - name: Copy Ceph client.admin keyring
-   ansible.builtin.template:
-     src: "ceph.client.admin.keyring.j2"
-     dest: "{{ ceph_cluster_admin_keyring }}"
-     mode: "{{ ceph_keyring_permissions }}"
-     owner: "{{ ceph_fs_config_owner }}"
-     group: "{{ ceph_fs_config_group }}"
-   when:
-     - ceph_copy_admin_key
+- name: Copy Ceph client.admin keyring
+  ansible.builtin.template:
+    src: "ceph.client.admin.keyring.j2"
+    dest: "{{ ceph_cluster_admin_keyring }}"
+    mode: "{{ ceph_keyring_permissions }}"
+    owner: "{{ ceph_fs_config_owner }}"
+    group: "{{ ceph_fs_config_group }}"
+  when:
+    - ceph_copy_admin_key
 
 
 - name: Add Ceph Authorized Key
