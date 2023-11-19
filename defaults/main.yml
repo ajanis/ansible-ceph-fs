@@ -36,7 +36,7 @@ ceph_cephfs_mds_port: 3300
 cephfs_user_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.keyring"
 cephfs_user_secret: "{{ vault_cephfs_user_secret | default('secret') }}"
 ceph_cluster_admin: admin
-ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret | default('secret')}}"
+ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret | default('secret') }}"
 ceph_cluster_admin_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.client.admin.keyring"
 ceph_keyring_permissions: '0600'
 
@@ -54,8 +54,6 @@ cephfs_mounts: []
 #     user: "{{ ceph_cephfs_user }}"
 #     secret: "{{ cephfs_data_secret }}"
 #     secretfile: "{{ ceph_cephfs_data_secretfile }}"
-
-
 
 ## EXAMPLE Vars needed to generate  ceph.conf
 # ceph_conf_overrides:
