@@ -23,7 +23,7 @@
 - name: 'Create systemd service files for mounting cephfs volumes. [ldap-autofs]' 
   ansible.builtin.template:
     src: datamount.mount.j2
-    dest: "{{ ceph_conf_directory }}/{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
+    dest: "/etc/systemd/system/{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
     mode: "{{ ceph_keyring_permissions }}"
   loop: "{{ cephfs_mounts }}"
   loop_control:
