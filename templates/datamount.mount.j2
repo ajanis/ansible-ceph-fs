@@ -7,7 +7,7 @@ Wants=network-online.target
 What={{ cephfs_mount.user }}@{{ cephfs_mount.fsid }}.{{ cephfs_mount.fsname }}=/
 Where={{ cephfs_mount.mount }}
 Type=ceph
-Options=mon_addr={% for host in cephfs_mount.mon %}{{ host }}:{{ cephfs_mount.port }}{% if not loop.last %}/{% endif %}{% endfor %},ms_mode={{ cephfs_mount.ms_mode }},secret={{ cephfs_mount.secret }}
+Options=mon_addr={% for host in cephfs_mount.mon %}{{ host }}:{{ cephfs_mount.port }}{% if not loop.last %}/{% endif %}{% endfor %},ms_mode={{ cephfs_mount.ms_mode }},secret={{ cephfs_mount.secret }}{% if cephfs_mount.mount_opts is defined %},{{ cephfs_mount.mount_opts | list | join(',') }}{% endif %}
 
 [Install]
 WantedBy=multi-user.target

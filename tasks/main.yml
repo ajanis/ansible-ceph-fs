@@ -9,14 +9,14 @@
   tags:
     - always
 
-- name: Gather facts from ceph servers
-  ansible.builtin.setup:
-  delegate_to: "{{ item }}"
-  delegate_facts: true
-  loop: "{{ groups['mons'] }}"
-  run_once: true
-  tags:
-    - always
+# - name: Gather facts from ceph servers
+#   ansible.builtin.setup:
+#   delegate_to: "{{ item }}"
+#   delegate_facts: true
+#   loop: "{{ groups['mons'] }}"
+#   run_once: true
+#   tags:
+#     - always
 
 - name: Install cephadm, install appropriate repositories and latest packages for mounting cephfs
   when:
