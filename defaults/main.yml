@@ -8,15 +8,15 @@ ceph_conf_local: false
 ceph_conf_directory: /etc/ceph
 cephfs_user: guest
 cephfs_mount_options: "defaults"
-ceph_stable_release: quincy
+ceph_release: reef
 ceph_origin: repository # use 'repository' for ceph repo and 'default' for os repo
 ceph_mirror: https://download.ceph.com
 ceph_stable_key: "{{ ceph_mirror }}/keys/release.asc"
-ceph_stable_deb_repo: "{{ ceph_mirror }}/debian-{{ ceph_stable_release }}"
-ceph_stable_rpm_repo: "{{ ceph_mirror }}/rpm-{{ ceph_stable_release }}"
+ceph_stable_deb_repo: "{{ ceph_mirror }}/debian-{{ ceph_release }}"
+ceph_stable_rpm_repo: "{{ ceph_mirror }}/rpm-{{ ceph_release }}"
 
 # # EXAMPLE MOUNT CONFIGS FOR CEPH MOUNT
-# ceph_mountconfig_directory: /opt/ceph
+ceph_mountconfig_directory: /opt/ceph
 ceph_fs_config_owner: ceph
 ceph_fs_config_group: ceph
 ceph_auth: cephx
@@ -27,14 +27,13 @@ ceph_mons:
   - monip1
   - monip2
 ceph_cephfs_mount: /data
-ceph_cephfs_user: admin
+ceph_cephfs_user: guest
 ceph_cephfs_user_secret: "{{ cephfs_data_secret | default('secret') }}"
-ceph_cephfs_user_secretfile: "{{ ceph_mountconfig_directory }}/{{ ceph_fsid }}.{{ ceph_cephfs_user }}.secret"
+ceph_cephfs_user_secretfile: "{{ ceph_mountconfig_directory }}/{{ ceph_fsid }}/{{ ceph_cluster_name }}.client.{{ ceph_cephfs_user }}.secret"
 ceph_cephfs_fsname: cephfs
 ceph_cephfs_ms_mode: prefer-crc
 ceph_cephfs_mds_port: 3300
-cephfs_user_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.keyring"
-cephfs_user_secret: "{{ vault_cephfs_user_secret | default('secret') }}"
+# cephfs_user_secret: "{{ vault_cephfs_user_secret | default('secret') }}"
 ceph_cluster_admin: admin
 ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret | default('secret') }}"
 ceph_cluster_admin_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.client.admin.keyring"
@@ -76,7 +75,9 @@ cephfs_mounts: []
 
 
 # Ceph sysctl performance tuning parameters
-ceph_os_tuning_params:
-  - { name: fs.file-max, value: 26234859 }
-  - { name: vm.zone_reclaim_mode, value: 0 }
-  - { name: vm.swappiness, value: 10 }
+ceph_os_tuning_params: []
+  # - { name: fs.file-max, value: 26234859 }
+  # - { name: vm.zone_reclaim_mode, value: 0 }
+  # - { name: vm.swappiness, value: 10 }
+
+ceph_cluster_user_keyring: /etc/ceph/ceph.client.user.keyring

@@ -8,7 +8,7 @@
       ansible.builtin.apt_key:
         url: "{{ ceph_stable_key }}"
         state: present
-    - name: "Install repository for Ceph {{ ceph_stable_release }}"
+    - name: "Install repository for Ceph {{ ceph_release }}"
       ansible.builtin.apt_repository:
         repo: "deb {{ ceph_stable_deb_repo }}/ {{ ansible_distribution_release }} main"
         state: present
@@ -19,10 +19,10 @@
     - ansible_os_family == "RedHat"
     - ceph_origin == "repository"
   block:
-    - name: "Add repository and key for {{ ceph_stable_release }}"
+    - name: "Add repository and key for {{ ceph_release }}"
       ansible.builtin.yum_repository:
         name: ceph
-        description: "Ceph {{ ceph_stable_release }} Repository"
+        description: "Ceph {{ ceph_release }} Repository"
         baseurl: "{{ ceph_stable_rpm_repo }}/el{{ ansible_distribution_major_version }}/$basearch"
         gpgkey: "{{ ceph_stable_key }}"
         gpgcheck: true

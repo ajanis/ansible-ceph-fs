@@ -8,6 +8,7 @@
     sysctl_file: /etc/sysctl.conf
     sysctl_set: true
   loop: "{{ ceph_os_tuning_params }}"
+  when: (ceph_os-tuning_params | length) > 0
 
 - name: Create Ceph config directory
   ansible.builtin.file:
@@ -29,34 +30,26 @@
     mode: '0644'
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
+  when:
+    - cephadm_config_options is defined
   tags:
     - cephfs-conf
-
-- name: Copy CephFS User Key
-  ansible.builtin.template:
-    src: "ceph.client.guest.keyring.j2"
-    dest: "{{ ceph_cephfs_user_keyring }}"
-    mode: "{{ ceph_keyring_permissions }}"
-    owner: "{{ ceph_fs_config_owner }}"
-    group: "{{ ceph_fs_config_group }}"
-  when:
-    - ceph_cephfs_copy_user_key
 
 - name: Copy Ceph client.admin keyring
   ansible.builtin.template:
     src: "ceph.client.admin.keyring.j2"
-    dest: "{{ ceph_cluster_admin_keyring }}"
+    dest: "{{ ceph_cluster_admin_keyring | default('/etc/ceph/ceph.client.admin.keyring') }}"
     mode: "{{ ceph_keyring_permissions }}"
     owner: "{{ ceph_fs_config_owner }}"
     group: "{{ ceph_fs_config_group }}"
   when:
-    - ceph_copy_admin_key
+    - ceph_copy_admin_key | default(false)
 
-
-- name: Add Ceph Authorized Key
+- name: Add root authorized key for Ceph
   ansible.posix.authorized_key:
     user: root
     key: "{{ ceph_root_ssh_key }}"
     state: present
   when:
     - "'mons' in group_names"
+    - ceph_root_ssh_key is defined and not none
