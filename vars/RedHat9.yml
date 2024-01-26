@@ -1,9 +1,9 @@
 ---
 ceph_prereq_pkgs:
-  - "centos-release-ceph-{{ ceph_stable_release }}"
+  - "centos-release-ceph-{{ ceph_release }}"
 ceph_pkgs:
   - ceph-common
 ceph_fs_config_owner: root
 ceph_fs_config_group: root
 ceph_origin: default
-ceph_stable_release: quincy
+ceph_release: reef

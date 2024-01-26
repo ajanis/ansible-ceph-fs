@@ -1,5 +1,5 @@
 ---
-ceph_stable_release: octopus
+ceph_release: reef
 ceph_pkgs:
   - ceph-common
 ceph_fs_config_owner: root
