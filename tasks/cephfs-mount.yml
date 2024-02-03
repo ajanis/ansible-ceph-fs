@@ -20,7 +20,7 @@
     loop_var: cephfs_mount
   when: (cephfs_mounts | default([])) | length > 0
 
-- name: 'Create systemd service files for mounting cephfs volumes. [ldap-autofs]'
+- name: Create systemd service files for mounting cephfs volumes
   ansible.builtin.template:
     src: datamount.mount.j2
     dest: "/etc/systemd/system/{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
@@ -30,16 +30,9 @@
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
   when: (cephfs_mounts | default([])) | length > 0
-  notify:
-    - restart nslcd
-    - restart nscd
-    - restart autofs
   register: systemd_template
   tags:
     - cephfs-systemd
-
-- name: Flush handlers
-  ansible.builtin.meta: flush_handlers
 
 - name: 'Register, enable and start systemd mount service for cephfs volumes. [ldap-autofs]'
   ansible.builtin.systemd:
@@ -52,6 +45,6 @@
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
   when:
-    - (cephfs_mounts | default([])) | length > 0
+    - systemd_template != None
   tags:
     - cephfs-systemd
