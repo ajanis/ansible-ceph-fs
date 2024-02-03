@@ -1,5 +1,5 @@
 #jinja2: trim_blocks: True, lstrip_blocks: True
-{% for section in cephadm_config_options %}
+{% for section in (cephadm_config_options|dict2items) %}
 [{{ section.key }}]
   {% if section.key == 'global' %}
   fsid = {{ fsid }}
