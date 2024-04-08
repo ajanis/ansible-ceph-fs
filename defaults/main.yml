@@ -7,7 +7,7 @@ cephfs_copy_user_key: true
 ceph_conf_local: false
 ceph_conf_directory: /etc/ceph
 cephfs_user: guest
-cephfs_mount_options: "defaults"
+cephfs_mount_options: defaults
 ceph_release: reef
 ceph_origin: repository # use 'repository' for ceph repo and 'default' for os repo
 ceph_mirror: https://download.ceph.com
@@ -37,7 +37,7 @@ ceph_cephfs_mds_port: 3300
 ceph_cluster_admin: admin
 ceph_cluster_admin_secret: "{{ vault_ceph_cluster_admin_secret | default('secret') }}"
 ceph_cluster_admin_keyring: "{{ ceph_conf_directory }}/{{ ceph_cluster_name }}.client.admin.keyring"
-ceph_keyring_permissions: '0600'
+ceph_keyring_permissions: "0600"
 
 cephfs_mounts: []
 # EXAMPLE Ceph vars used ceph_mount:
@@ -72,12 +72,10 @@ cephfs_mounts: []
 #   mon:
 #     mon_compact_on_start: 'true'
 #     mon_max_pg_per_osd: 250
-
-
 # Ceph sysctl performance tuning parameters
 ceph_os_tuning_params: []
-  # - { name: fs.file-max, value: 26234859 }
-  # - { name: vm.zone_reclaim_mode, value: 0 }
-  # - { name: vm.swappiness, value: 10 }
+# - { name: fs.file-max, value: 26234859 }
+# - { name: vm.zone_reclaim_mode, value: 0 }
+# - { name: vm.swappiness, value: 10 }
 
 ceph_cluster_user_keyring: /etc/ceph/ceph.client.user.keyring

@@ -1,41 +1,41 @@
 ---
-- name: "Install Ceph Repository and GPG Key"
+- name: Install Ceph Repository and GPG Key
   when:
     - ansible_os_family == "Debian"
     - ceph_origin == "repository"
   block:
-    - name: "Add gpg key for Ceph repository"
+    - name: Add gpg key for Ceph repository
       ansible.builtin.apt_key:
         url: "{{ ceph_stable_key }}"
         state: present
-    - name: "Install repository for Ceph {{ ceph_release }}"
+    - name: Install repository for Ceph {{ ceph_release }}
       ansible.builtin.apt_repository:
-        repo: "deb {{ ceph_stable_deb_repo }}/ {{ ansible_distribution_release }} main"
+        repo: deb {{ ceph_stable_deb_repo }}/ {{ ansible_distribution_release }} main
         state: present
         filename: ceph
 
-- name: "Install Ceph Repository and GPG Key"
+- name: Install Ceph Repository and GPG Key
   when:
     - ansible_os_family == "RedHat"
     - ceph_origin == "repository"
   block:
-    - name: "Add repository and key for {{ ceph_release }}"
+    - name: Add repository and key for {{ ceph_release }}
       ansible.builtin.yum_repository:
         name: ceph
-        description: "Ceph {{ ceph_release }} Repository"
+        description: Ceph {{ ceph_release }} Repository
         baseurl: "{{ ceph_stable_rpm_repo }}/el{{ ansible_distribution_major_version }}/$basearch"
         gpgkey: "{{ ceph_stable_key }}"
         gpgcheck: true
         state: present
 
-- name: "Install Ceph Prereq Packages"
+- name: Install Ceph Prereq Packages
   ansible.builtin.package:
     name: "{{ ceph_prereq_pkgs }}"
     state: present
   when:
     - ceph_prereq_pkgs | length > 0
 
-- name: "Install Ceph packages"
+- name: Install Ceph packages
   ansible.builtin.package:
     name: "{{ ceph_pkgs }}"
     state: present
