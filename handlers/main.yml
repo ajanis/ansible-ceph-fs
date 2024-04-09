@@ -1,17 +1,17 @@
 ---
-- name: Restart nslcd
+- name: restart nslcd
   ansible.builtin.service:
     name: nslcd
     state: restarted
     enabled: true
 
-- name: Restart nscd
+- name: restart nscd
   ansible.builtin.service:
     name: nscd
     state: restarted
     enabled: true
 
-- name: Restart autofs
+- name: restart autofs
   ansible.builtin.service:
     name: autofs
     state: restarted
