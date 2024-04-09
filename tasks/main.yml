@@ -23,12 +23,18 @@
     - ansible_distribution != "Raspbian"
   block:
     - name: Install ceph-common and supporting packages
-      ansible.builtin.import_tasks: install.yml
+      ansible.builtin.include_tasks:
+        file: install.yml
+
     - name: Copy and update Ceph configuration and suppporting files
-      ansible.builtin.import_tasks: configure.yml
+      ansible.builtin.include_tasks:
+        file: configure.yml
+
       tags:
         - cephfs-configure
     - name: Configure ceph mount options
-      ansible.builtin.import_tasks: cephfs-mount.yml
+      ansible.builtin.include_tasks:
+        file: cephfs-mount.yml
+
       tags:
         - cephfs-mount
