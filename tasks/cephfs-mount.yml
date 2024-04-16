@@ -11,9 +11,9 @@
   ansible.builtin.template:
     src: cephfs_user_secret.j2
     dest: "{{ cephfs_mount.secretfile }}"
-    mode: "{{ ceph_keyring_permissions }}"
-    owner: "{{ ceph_fs_config_owner }}"
-    group: "{{ ceph_fs_config_group }}"
+    mode: "{{ ceph_keyring_permissions | default('0600') }}"
+    owner: "{{ ceph_fs_config_owner | default('root') }}"
+    group: "{{ ceph_fs_config_group | default('root') }}"
   loop: "{{ cephfs_mounts }}"
   loop_control:
     label: "{{ cephfs_mount.mount }}"

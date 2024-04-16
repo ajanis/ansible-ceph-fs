@@ -4,15 +4,26 @@
     - ansible_os_family == "Debian"
     - ceph_origin == "repository"
   block:
-    - name: Add gpg key for Ceph repository
-      ansible.builtin.apt_key:
-        url: "{{ ceph_stable_key }}"
+    - name: Install Ceph repository and gpg key for Debian
+      ansible.builtin.deb822_repository:
+        name: ceph
+        types: deb
+        enabled: true
         state: present
-    - name: Install repository for Ceph {{ ceph_release }}
-      ansible.builtin.apt_repository:
-        repo: deb {{ ceph_stable_deb_repo }}/ {{ ansible_distribution_release }} main
-        state: present
-        filename: ceph
+        uris: "{{ ceph_stable_deb_repo }}/{{ ansible_distribution | lower }}"
+        suites: "{{ ansible_distribution_release }}"
+        components: "{{ ceph_repo_component | default('main') }}"
+        signed_by: "{{ ceph_stable_key }}"
+
+# - name: Add gpg key for Ceph repository
+#   ansible.builtin.apt_key:
+#     url: "{{ ceph_stable_key }}"
+#     state: present
+# - name: Install repository for Ceph {{ ceph_release }}
+#   ansible.builtin.apt_repository:
+#     repo: deb {{ ceph_stable_deb_repo }}/ {{ ansible_distribution_release }} main
+#     state: present
+#     filename: ceph
 
 - name: Install Ceph Repository and GPG Key
   when:
