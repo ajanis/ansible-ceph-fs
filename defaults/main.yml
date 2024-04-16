@@ -11,6 +11,7 @@ cephfs_mount_options: defaults
 ceph_release: reef
 ceph_origin: repository # use 'repository' for ceph repo and 'default' for os repo
 ceph_mirror: https://download.ceph.com
+ceph_repo_component: main
 ceph_stable_key: "{{ ceph_mirror }}/keys/release.asc"
 ceph_stable_deb_repo: "{{ ceph_mirror }}/debian-{{ ceph_release }}"
 ceph_stable_rpm_repo: "{{ ceph_mirror }}/rpm-{{ ceph_release }}"
