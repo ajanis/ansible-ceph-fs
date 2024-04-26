@@ -10,7 +10,7 @@
         types: deb
         enabled: true
         state: present
-        uris: "{{ ceph_stable_deb_repo }}/{{ ansible_distribution | lower }}"
+        uris: "{{ ceph_stable_deb_repo }}"
         suites: "{{ ansible_distribution_release }}"
         components: "{{ ceph_repo_component | default('main') }}"
         signed_by: "{{ ceph_stable_key }}"
