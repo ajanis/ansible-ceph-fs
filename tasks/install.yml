@@ -15,16 +15,6 @@
         components: "{{ ceph_repo_component | default('main') }}"
         signed_by: "{{ ceph_stable_key }}"
 
-# - name: Add gpg key for Ceph repository
-#   ansible.builtin.apt_key:
-#     url: "{{ ceph_stable_key }}"
-#     state: present
-# - name: Install repository for Ceph {{ ceph_release }}
-#   ansible.builtin.apt_repository:
-#     repo: deb {{ ceph_stable_deb_repo }}/ {{ ansible_distribution_release }} main
-#     state: present
-#     filename: ceph
-
 - name: Install Ceph Repository and GPG Key
   when:
     - ansible_os_family == "RedHat"
