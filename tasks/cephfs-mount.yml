@@ -10,7 +10,7 @@
 - name: Create Ceph Minimal Config file
   ansible.builtin.template:
     dest: "{{ cephfs_mount.minimal_conf }}"
-    src: ceph_minimal_conf.j2
+    src: ceph_minimal.conf.j2
     mode: "{{ ceph_keyring_permissions | default('0600') }}"
     owner: "{{ ceph_fs_config_owner | default('root') }}"
     group: "{{ ceph_fs_config_group | default('root') }}"
