@@ -7,7 +7,7 @@ Wants=network-online.target
 What={{ cephfs_mount.user }}@.{{ cephfs_mount.fsname }}=/
 Where={{ cephfs_mount.mount }}
 Type=ceph
-Options=secretfile={{ cephfs_mount.secretfile | default(cephfs_mount.secret) }}{% if cephfs_mount.mount_opts is defined %},{{ cephfs_mount.mount_opts | list | join(',') }}{% endif %}
+Options=conf={{ cephfs_mount.conf }},secretfile={{ cephfs_mount.secretfile | default(cephfs_mount.secret) }}{% if cephfs_mount.mount_opts is defined %},{{ cephfs_mount.mount_opts | list | join(',') }}{% endif %}
 
 [Install]
 WantedBy=multi-user.target
