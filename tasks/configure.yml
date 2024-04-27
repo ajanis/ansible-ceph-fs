@@ -48,8 +48,8 @@
 - name: Add root authorized key for Ceph
   ansible.posix.authorized_key:
     user: root
-    key: "{{ ceph_root_ssh_key }}"
+    key: "{{ ceph_root_ssh_pubkey }}"
     state: present
   when:
     - "'mons' in group_names"
-    - ceph_root_ssh_key is defined and not none
+    - ceph_root_ssh_pubkey is defined and not none
