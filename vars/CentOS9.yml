@@ -4,4 +4,3 @@ ceph_pkgs:
 ceph_fs_config_owner: root
 ceph_fs_config_group: root
 ceph_origin: repository
-ceph_release: reef
