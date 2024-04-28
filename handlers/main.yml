@@ -16,3 +16,11 @@
     name: autofs
     state: restarted
     enabled: true
+
+- name: restart mounts
+  ansible.builtin.set_fact:
+    cephfs_mounts_restart: true
+
+- name: update packages
+  ansible.builtin.set_fact:
+    cephfs_update_packages: true

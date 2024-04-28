@@ -14,12 +14,43 @@
         suites: "{{ ansible_distribution_release }}"
         components: "{{ ceph_repo_component | default('main') }}"
         signed_by: "{{ ceph_stable_key }}"
+      notify: update packages
+
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: Install Ceph Packages on Debian systems
+      ansible.builtin.apt:
+        name: "{{ ceph_pkgs }}"
+        state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
+        update_cache: true
+        autoremove: true
+        autoclean: true
+      register: ceph_pkg_install
+      until: ceph_pkg_install is not failed
+      retries: 10
+      timeout: 60
+      delay: 10
 
 - name: Install Ceph Repository and GPG Key
   when:
     - ansible_os_family == "RedHat"
-    - ceph_origin == "repository"
   block:
+    - name: Install Ceph Repository Package on RHEL systems
+      ansible.builtin.yum:
+        name: "{{ ceph_prereq_pkgs }}"
+        state: present
+        update_cache: true
+        autoremove: true
+        disable_excludes:
+        download_only: false
+        lock_timeout: 30
+        install_weak_deps: true
+        download_dir:
+      when:
+        - ceph_origin == "default"
+        - ceph_prereq_pkgs | length > 0
+
     - name: Add repository and key for {{ ceph_release }}
       ansible.builtin.yum_repository:
         name: ceph
@@ -28,15 +59,26 @@
         gpgkey: "{{ ceph_stable_key }}"
         gpgcheck: true
         state: present
+      notify: update packages
+      when:
+        - ceph_origin == "repository"
 
-- name: Install Ceph Prereq Packages
-  ansible.builtin.package:
-    name: "{{ ceph_prereq_pkgs }}"
-    state: present
-  when:
-    - ceph_prereq_pkgs | length > 0
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
 
-- name: Install Ceph packages
-  ansible.builtin.package:
-    name: "{{ ceph_pkgs }}"
-    state: present
+    - name: Install Ceph Packages on RHEL systems
+      ansible.builtin.yum:
+        name: "{{ ceph_pkgs }}"
+        state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
+        update_cache: true
+        autoremove: true
+        disable_excludes:
+        download_only: false
+        lock_timeout: 30
+        install_weak_deps: true
+        download_dir:
+      register: ceph_pkg_install
+      until: ceph_pkg_install is not failed
+      retries: 10
+      timeout: 60
+      delay: 10

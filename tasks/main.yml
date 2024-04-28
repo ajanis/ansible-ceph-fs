@@ -26,16 +26,15 @@
     - name: Install ceph-common and supporting packages
       ansible.builtin.include_tasks:
         file: install.yml
-
+      tags:
+        - cephfs-configure
     - name: Copy and update Ceph configuration and suppporting files
       ansible.builtin.include_tasks:
         file: configure.yml
-
       tags:
         - cephfs-configure
     - name: Configure ceph mount options
       ansible.builtin.include_tasks:
         file: cephfs-mount.yml
-
       tags:
         - cephfs-mount

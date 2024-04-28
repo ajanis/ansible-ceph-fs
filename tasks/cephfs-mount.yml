@@ -18,6 +18,7 @@
   loop_control:
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
+  notify: restart mounts
   when: (cephfs_mounts | default([])) | length > 0
 
 - name: Create CephFS Mount-User SecretFile
@@ -31,6 +32,7 @@
   loop_control:
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
+  notify: restart mounts
   when: (cephfs_mounts | default([])) | length > 0
 
 - name: Create systemd service files for mounting cephfs volumes
@@ -43,21 +45,25 @@
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
   when: (cephfs_mounts | default([])) | length > 0
-  register: systemd_template
+  notify: restart mounts
+  tags:
+    - cephfs-systemd
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
   tags:
     - cephfs-systemd
 
 - name: Register, enable and start systemd mount service for cephfs volumes. [ldap-autofs]
   ansible.builtin.systemd:
     name: "{{ cephfs_mount.mount | regex_replace('^\\/', '') }}.mount"
-    state: "{{ 'restarted' if systemd_template is changed else 'started' }}"
+    state: "{{ 'restarted' if (cephfs_mounts_restart | default(false)) else 'started' }}"
     enabled: true
     daemon_reload: true
   loop: "{{ cephfs_mounts }}"
   loop_control:
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
-  when:
-    - systemd_template != None
+  when: (cephfs_mounts | default([])) | length > 0
   tags:
     - cephfs-systemd
