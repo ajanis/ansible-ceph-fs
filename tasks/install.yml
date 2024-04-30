@@ -29,7 +29,6 @@
       register: ceph_pkg_install
       until: ceph_pkg_install is not failed
       retries: 10
-      timeout: 60
       delay: 10
 
 - name: Install Ceph Repository and GPG Key
@@ -80,5 +79,4 @@
       register: ceph_pkg_install
       until: ceph_pkg_install is not failed
       retries: 10
-      timeout: 60
       delay: 10
