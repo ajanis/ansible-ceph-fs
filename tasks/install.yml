@@ -42,18 +42,18 @@
         state: present
       notify: update packages
       when:
-        - ceph_origin == "repository"
+        - ceph_origin == 'repository'
 
     - name: Install Ceph Prereq Packages
       ansible.builtin.package:
         name: "{{ ceph_prereq_pkgs }}"
         state: present
       when:
-        - ceph_origin == repository
+        - ceph_origin == 'repository'
         - ceph_prereq_pkgs | length > 0
 
     - name: Install Ceph Packages on RHEL systems
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: "{{ ceph_pkgs }}"
         state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
         update_cache: true
