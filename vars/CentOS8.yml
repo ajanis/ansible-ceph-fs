@@ -1,6 +1,4 @@
 ---
-ceph_prereq_pkgs:
-  - centos-release-ceph-{{ ceph_release }}
 ceph_pkgs:
   - ceph-common
 ceph_fs_config_owner: root
