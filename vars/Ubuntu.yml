@@ -3,4 +3,4 @@ ceph_pkgs:
   - ceph-common
 ceph_fs_config_owner: ceph
 ceph_fs_config_group: ceph
-ceph_origin: default
+ceph_origin: repository

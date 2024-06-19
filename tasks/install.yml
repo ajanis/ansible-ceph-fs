@@ -57,12 +57,7 @@
         name: "{{ ceph_pkgs }}"
         state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
         update_cache: true
-        autoremove: true
-        disable_excludes:
-        download_only: false
-        lock_timeout: 30
-        install_weak_deps: true
-        download_dir:
+        lock_timeout: 300
       register: ceph_pkg_install
       until: ceph_pkg_install is not failed
       retries: 10
