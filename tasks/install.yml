@@ -28,8 +28,12 @@
         name: "{{ ceph_pkgs }}"
         state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
         update_cache: true
-        autoremove: true
-        autoclean: true
+        lock_timeout: 60
+      register: ceph_dpkg_install
+      until: ceph_dpkg_install is not failed
+      timeout: 60
+      retries: 5
+      delay: 10
   rescue:
     - name: Remove Ceph repository
       ansible.builtin.deb822_repository:
@@ -65,10 +69,11 @@
         name: "{{ ceph_pkgs }}"
         state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
         update_cache: true
-        lock_timeout: 300
-      register: ceph_pkg_install
-      until: ceph_pkg_install is not failed
-      retries: 10
+        lock_timeout: 60
+      register: ceph_rpm_install
+      until: ceph_rpm_install is not failed
+      timeout: 60
+      retries: 5
       delay: 10
   rescue:
     - name: Remove Ceph repository
