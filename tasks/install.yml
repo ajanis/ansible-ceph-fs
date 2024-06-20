@@ -8,9 +8,11 @@
         name: ceph
         types: deb
         enabled: true
+        trusted: true
+        allow_insecure: true
         state: present
         uris: "{{ ceph_stable_deb_repo }}"
-        suites: "{{ ansible_distribution_release }}"
+        suites: "{{ ceph_repo_suites | default(ansible_distribution_release) }}"
         components: "{{ ceph_repo_component | default('main') }}"
         signed_by: "{{ ceph_stable_key }}"
       notify: update packages
