@@ -15,7 +15,7 @@
         suites: "{{ ceph_repo_suites | default(ansible_distribution_release) }}"
         components: "{{ ceph_repo_component | default('main') }}"
         signed_by: "{{ ceph_stable_key }}"
-      register: ceph_repo_add
+      register: ceph_apt_repo_add
       notify: update packages
       when:
         - ceph_origin == "repository"
@@ -70,3 +70,8 @@
       until: ceph_pkg_install is not failed
       retries: 10
       delay: 10
+  rescue:
+    - name: Remove Ceph repository
+      ansible.builtin.yum_repository:
+        name: ceph
+        state: absent
