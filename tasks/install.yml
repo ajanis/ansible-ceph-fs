@@ -15,6 +15,7 @@
         suites: "{{ ceph_repo_suites | default(ansible_distribution_release) }}"
         components: "{{ ceph_repo_component | default('main') }}"
         signed_by: "{{ ceph_stable_key }}"
+      register: ceph_repo_add
       notify: update packages
       when:
         - ceph_origin == "repository"
@@ -29,6 +30,12 @@
         update_cache: true
         autoremove: true
         autoclean: true
+  rescue:
+    - name: Remove Ceph repository
+      ansible.builtin.deb822_repository:
+        name: ceph
+        types: deb
+        state: absent
 
 - name: Install Ceph Repository and GPG Key
   when:
