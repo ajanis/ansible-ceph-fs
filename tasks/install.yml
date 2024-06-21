@@ -28,10 +28,9 @@
         name: "{{ ceph_pkgs }}"
         state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
         update_cache: true
-        lock_timeout: 60
       register: ceph_dpkg_install
       until: ceph_dpkg_install is not failed
-      timeout: 60
+      timeout: 300
       retries: 5
       delay: 10
   rescue:
@@ -69,10 +68,9 @@
         name: "{{ ceph_pkgs }}"
         state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
         update_cache: true
-        lock_timeout: 60
       register: ceph_rpm_install
       until: ceph_rpm_install is not failed
-      timeout: 60
+      timeout: 300
       retries: 5
       delay: 10
   rescue:
