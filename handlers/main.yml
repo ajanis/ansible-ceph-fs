@@ -1,26 +1,26 @@
 ---
-- name: restart nslcd
+- name: Restart NSLCD
   ansible.builtin.service:
     name: nslcd
     state: restarted
     enabled: true
 
-- name: restart nscd
+- name: Restart NSCD
   ansible.builtin.service:
     name: nscd
     state: restarted
     enabled: true
 
-- name: restart autofs
+- name: Restart AutoFS
   ansible.builtin.service:
     name: autofs
     state: restarted
     enabled: true
 
-- name: restart mounts
+- name: Restart Mounts
   ansible.builtin.set_fact:
     cephfs_mounts_restart: true
 
-- name: update packages
+- name: Update Packages
   ansible.builtin.set_fact:
     cephfs_update_packages: true
