@@ -16,7 +16,7 @@
         components: "{{ ceph_repo_component | default('main') }}"
         signed_by: "{{ ceph_stable_key }}"
       register: ceph_apt_repo_add
-      notify: update packages
+      notify: Update Packages
       when:
         - ceph_origin == "repository"
 
@@ -52,7 +52,7 @@
         gpgkey: "{{ ceph_stable_key }}"
         gpgcheck: true
         state: present
-      notify: update packages
+      notify: Update Packages
       when:
         - ceph_origin == 'repository'
 

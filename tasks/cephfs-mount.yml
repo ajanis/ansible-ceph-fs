@@ -18,7 +18,7 @@
   loop_control:
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
-  notify: restart mounts
+  notify: Restart Mounts
   when: (cephfs_mounts | default([])) | length > 0
 
 - name: Create CephFS Mount-User SecretFile
@@ -32,7 +32,7 @@
   loop_control:
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
-  notify: restart mounts
+  notify: Restart Mounts
   when: (cephfs_mounts | default([])) | length > 0
 
 - name: Create systemd service files for mounting cephfs volumes
@@ -45,7 +45,7 @@
     label: "{{ cephfs_mount.mount }}"
     loop_var: cephfs_mount
   when: (cephfs_mounts | default([])) | length > 0
-  notify: restart mounts
+  notify: Restart Mounts
   tags:
     - cephfs-systemd
 
