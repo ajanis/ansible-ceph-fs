@@ -11,7 +11,6 @@
 - name: Install cephadm, install appropriate repositories and latest packages for mounting cephfs
   when:
     - ansible_distribution != "Raspbian"
-    - "'proxmox' not in group_names"
   block:
     - name: Install ceph-common and supporting packages
       ansible.builtin.include_tasks:

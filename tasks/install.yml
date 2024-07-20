@@ -8,7 +8,6 @@
         name: ceph
         types: deb
         enabled: true
-        trusted: true
         allow_insecure: true
         state: present
         uris: "{{ ceph_stable_deb_repo }}"
