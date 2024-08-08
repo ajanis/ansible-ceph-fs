@@ -1,4 +1,12 @@
 ---
+- name: wait_for_locks | Test for cloud-init
+  ansible.builtin.shell:
+    cmd: command -v cloud-init
+    executable: /bin/bash
+  register: cicheck
+  changed_when: false
+  failed_when: false
+
 - name: wait_for_locks | Wait or cloud-init to finish
   community.general.cloud_init_data_facts:
     filter: status
@@ -8,6 +16,9 @@
     - not ciresult.cloud_init_data_facts.status.v1.stage
   retries: 50
   delay: 10
+  when:
+    - cicheck is defined
+    - cicheck is not failed
 
 - name: wait_for_locks | Wait for automatic system updates
   ansible.builtin.shell:
@@ -15,12 +26,25 @@
   loop:
     - /var/lib/dpkg/lock
     - /var/lib/dpkg/lock-frontend
-    - /var/lib/rpm/.rpm.lock
   register: lockresult
   until:
     - lockresult.rc == 1
   changed_when:
     - lockresult.rc == 0
-  failed_when: false
   retries: 50
   delay: 10
+  when:
+    - ansible_os_family|lower == "debian"
+
+- name: wait_for_locks | Wait for automatic system updates
+  ansible.builtin.shell:
+    cmd: fuser /var/lib/rpm/.rpm.lock >/dev/null 2>&1
+  register: lockresult
+  until:
+    - lockresult.rc == 1
+  changed_when:
+    - lockresult.rc == 0
+  retries: 50
+  delay: 10
+  when:
+    - (ansible_os_family|lower) == "redhat"
