@@ -19,29 +19,24 @@
         components: "{{ ceph_repo_component | default('main') }}"
         signed_by: "{{ ceph_stable_key }}"
       register: ceph_apt_repo_add
-      notify: Update Packages
+      until:
+        - ceph_apt_repo_add is not failed
       when:
         - ceph_origin == "repository"
 
-    - name: Flush handlers
-      ansible.builtin.meta: flush_handlers
+    - name: packages-debian | Update APT Repos # noqa no-handler
+      ansible.builtin.apt:
+        update_cache: true
+      register: cache_updated
+      until:
+        - cache_updated is not failed
 
     - name: Install Ceph Packages for Debian
       ansible.builtin.apt:
         name: "{{ ceph_pkgs }}"
         state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
-        update_cache: true
       register: ceph_dpkg_install
       until: ceph_dpkg_install is not failed
-      timeout: 300
-      retries: 5
-      delay: 10
-  rescue:
-    - name: Remove Ceph repository
-      ansible.builtin.deb822_repository:
-        name: ceph
-        types: deb
-        state: absent
 
 - name: Install Ceph Repository and GPG Key
   when:
@@ -59,6 +54,13 @@
       when:
         - ceph_origin == 'repository'
 
+    - name: packages-redhat | Update Yum Repos # noqa no-handler
+      ansible.builtin.dnf:
+        update_cache: true
+      register: rpm_cache_updated
+      until:
+        - rpm_cache_updated is not failed
+
     - name: Install Ceph Prereq Packages
       ansible.builtin.package:
         name: "{{ ceph_prereq_pkgs }}"
@@ -66,18 +68,16 @@
       when:
         - ceph_prereq_pkgs | length > 0
 
+    - name: packages-redhat | Update Yum Repos # noqa no-handler
+      ansible.builtin.dnf:
+        update_cache: true
+      register: rpm_cache_updated
+      until:
+        - rpm_cache_updated is not failed
+
     - name: Install Ceph Packages on RHEL systems
       ansible.builtin.dnf:
         name: "{{ ceph_pkgs }}"
         state: "{{ 'latest' if (cephfs_update_packages | default(false)) else 'present' }}"
-        update_cache: true
       register: ceph_rpm_install
       until: ceph_rpm_install is not failed
-      timeout: 300
-      retries: 5
-      delay: 10
-  rescue:
-    - name: Remove Ceph repository
-      ansible.builtin.yum_repository:
-        name: ceph
-        state: absent
