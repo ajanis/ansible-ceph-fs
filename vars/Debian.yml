@@ -4,7 +4,7 @@ ceph_pkgs:
 ceph_fs_config_owner: ceph
 ceph_fs_config_group: ceph
 ceph_origin: repository
-ceph_stable_deb_repo: http://download.proxmox.com/{{ ansible_distribution | lower }}/ceph-{{ pve_ceph_release }}
+ceph_stable_deb_repo: http://download.proxmox.com/{{ ansible_distribution | lower }}/ceph-{{ ceph_release }}
 ceph_repo_suites: "{{ ansible_distribution_release | lower }}"
 ceph_repo_component: no-subscription
 ceph_stable_key: https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg
