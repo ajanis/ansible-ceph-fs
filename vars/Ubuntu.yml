@@ -5,3 +5,4 @@ ceph_fs_config_owner: ceph
 ceph_fs_config_group: ceph
 ceph_origin: repository
 ceph_repo_suites: jammy
+ceph_release: reef
